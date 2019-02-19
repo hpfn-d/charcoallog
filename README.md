@@ -1,8 +1,8 @@
-[![Build Status](https://www.travis-ci.org/hpfn/charcoallog.svg?branch=master)](https://www.travis-ci.org/hpfn/charcoallog)
-[![Updates](https://pyup.io/repos/github/hpfn/charcoallog/shield.svg)](https://pyup.io/repos/github/hpfn/charcoallog/)
-[![Python 3](https://pyup.io/repos/github/hpfn/charcoallog/python-3-shield.svg)](https://pyup.io/repos/github/hpfn/charcoallog/)
-[![Code Health](https://landscape.io/github/hpfn/charcoallog/master/landscape.svg?style=flat)](https://landscape.io/github/hpfn/charcoallog/master)
-[![codecov](https://codecov.io/gh/hpfn/charcoallog/branch/master/graph/badge.svg)](https://codecov.io/gh/hpfn/charcoallog)
+[![Build Status](https://www.travis-ci.org/hpfn-d/charcoallog.svg?branch=master)](https://www.travis-ci.org/hpfn-d/charcoallog)
+[![Updates](https://pyup.io/repos/github/hpfn-d/charcoallog/shield.svg)](https://pyup.io/repos/github/hpfn-d/charcoallog/)
+[![Python 3](https://pyup.io/repos/github/hpfn-d/charcoallog/python-3-shield.svg)](https://pyup.io/repos/github/hpfn-d/charcoallog/)
+[![codecov](https://codecov.io/gh/hpfn-d/charcoallog/branch/master/graph/badge.svg)](https://codecov.io/gh/hpfn-d/charcoallog)
+
 
 
 tox py36, py37 'OK'
