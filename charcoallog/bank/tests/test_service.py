@@ -1,5 +1,5 @@
 # from collections import OrderedDict
-# from decimal import Decimal
+from decimal import Decimal
 
 from django.db.models import QuerySet
 from django.test import TestCase
@@ -54,18 +54,18 @@ class ServiceLayerTest(TestCase):
     def test_form2_instance(self):
         self.assertIsInstance(self.response.form2, MethodGet)
 
-    def test_line1_instance(self):
+    def test_brief_bank_instance(self):
         self.assertIsInstance(self.response.brief_bank, BriefBank)
 
-    # def test_line1_account_names(self):
-    #     self.assertIn(self.account_name, self.response.line1.account_names())
-    #
-    # def test_line1_whats_left(self):
-    #     """
-    #         whats_left attribute must be 10 for user teste
-    #         line1.account_names must be called before whats_left
-    #         (account_values)
-    #     """
-    #     self.response.line1.account_names()
-    #     self.assertEqual(self.response.line1.whats_left(), Decimal('10.00'))
-    #
+    def test_brief_bank_account_names(self):
+        self.assertIn(self.account_name, self.response.brief_bank.account_names())
+
+    def test_brief_bank_whats_left(self):
+        """
+            whats_left attribute must be 10 for user teste
+            line1.account_names must be called before whats_left
+            (account_values)
+        """
+        self.response.brief_bank.account_names()
+        self.assertEqual(self.response.brief_bank.whats_left(), Decimal('10.00'))
+
