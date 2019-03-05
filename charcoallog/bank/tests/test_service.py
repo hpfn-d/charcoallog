@@ -6,7 +6,7 @@ from django.test import TestCase
 
 from charcoallog.bank.brief_bank_service import BriefBank
 from charcoallog.bank.get_service import MethodGet
-from charcoallog.bank.models import Extract
+from charcoallog.bank.models import Extract, Schedule
 from charcoallog.bank.post_service import MethodPost
 from charcoallog.bank.service import ShowData
 
@@ -35,6 +35,7 @@ class ServiceLayerTest(TestCase):
             category='test',
             payment=self.account_name
         )
+        Schedule.objects.create(**data)
 
         Extract.objects.create(**data)
         Extract.objects.create(**others_data)
@@ -46,7 +47,7 @@ class ServiceLayerTest(TestCase):
         self.response = ShowData(RQST)
 
     def test_query_user_instance(self):
-        self.assertIsInstance(self.response.query_user, QuerySet)
+        self.assertIsInstance(self.response.query_bank, QuerySet)
 
     def test_form1_instance(self):
         self.assertIsInstance(self.response.form1, MethodPost)
@@ -63,9 +64,26 @@ class ServiceLayerTest(TestCase):
     def test_brief_bank_whats_left(self):
         """
             whats_left attribute must be 10 for user teste
-            line1.account_names must be called before whats_left
+            bank.account_names must be called before whats_left
             (account_values)
         """
         self.response.brief_bank.account_names()
         self.assertEqual(self.response.brief_bank.whats_left(), Decimal('10.00'))
 
+    def test_query_schedule_instance(self):
+        self.assertIsInstance(self.response.query_schedule, QuerySet)
+
+    def test_brief_schedule_instance(self):
+        self.assertIsInstance(self.response.brief_schedule, BriefBank)
+
+    def test_brief_schedule_account_names(self):
+        self.assertIn(self.account_name, self.response.brief_schedule.account_names())
+
+    def test_brief_schedule_whats_left(self):
+        """
+            whats_left attribute must be 10 for user teste
+            bank.account_names must be called before whats_left
+            (account_values)
+        """
+        self.response.brief_schedule.account_names()
+        self.assertEqual(self.response.brief_schedule.whats_left(), Decimal('10.00'))
