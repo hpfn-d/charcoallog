@@ -63,5 +63,8 @@ class SelectExtractForm(forms.Form):
     year = int(d.strftime("%Y"))
     years = [x for x in range(year - 5, year + 10)]
     column = forms.CharField(max_length=70, required=True)
-    from_date = forms.DateField(widget=forms.SelectDateWidget(years=years), required=True)
-    to_date = forms.DateField(widget=forms.SelectDateWidget, required=True)
+    # from_date = forms.DateField(widget=forms.SelectDateWidget(years=years), required=True)
+    # to_date = forms.DateField(widget=forms.SelectDateWidget, required=True)
+    # CSS date fields
+    from_date = forms.DateField(required=True)
+    to_date = forms.DateField(required=True)
