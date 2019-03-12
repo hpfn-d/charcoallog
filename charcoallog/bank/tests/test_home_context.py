@@ -39,7 +39,7 @@ class HomeContextTest(TestCase):
             ('<form', 2),
             ('<input', 14),
             ('<select', 6),
-            ('type="text"', 9),
+            ('type="text"', 8),
             ('type="number"', 1),
             ('step="0.01"', 1),
             ('<button', 2),
