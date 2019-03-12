@@ -7,22 +7,11 @@
 	    </ul>
 	{% else %}
         <br />
-        <b>Total</b>:
-        <div id="total">
-            {% if show_data.form2.query_default.total.money__sum < 0 %}
-            <font color="red">
-                {{ show_data.form2.query_default.total.money__sum }}
-            </font>
-            {% else %}
-                {{ show_data.form2.query_default.total.money__sum }}
 
-            {% endif %}
-        </div>
-        <br />
-        <div class="container bg-white">
+        <div class="bg-white form-inline m-0 p-0">
             <table>
                 <td>
-                    <input type="text" class="form-inline m-0 p-0 bg-white" size="11"
+                    <input type="date" class="form-inline m-0 p-0 bg-white" size="11"
                            style="font-size:10px;border:none" value='date' readonly>
                 </td>
                 <td>
@@ -43,6 +32,12 @@
                 </td>
             </table>
         </div>
+
+        {% if show_data.brief_schedule.account_names.items %}
+        <font size="1px" color="red">
+        schedule next month: {{ show_data.brief_schedule.whats_left }}
+        </font>
+        {% endif %}
 
         {% for bills in schedule %}
             <table>
@@ -74,12 +69,19 @@
             </table>
         {% endfor %}
 
-        {% if show_data.brief_schedule.account_names.items %}
-        <font size="1px" color="red">
-        next month: {{ show_data.brief_schedule.whats_left }}
-        </font>
-        {% endif %}
+        <div id="total">
+        <font size="1px">
+        <b>Total</b>:
+            {% if show_data.form2.query_default.total.money__sum < 0 %}
+            <font color="red">
+                {{ show_data.form2.query_default.total.money__sum }}
+            </font>
+            {% else %}
+                {{ show_data.form2.query_default.total.money__sum }}
 
+            {% endif %}
+        </font>
+        </div>
 
         {% for b in show_data.form2.query_default %}
         <form method="post" id="{{ b.id }}">
