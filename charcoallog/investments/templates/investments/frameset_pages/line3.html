@@ -1,6 +1,13 @@
 <div class="scroll" id="vue_ajax">
-{% for b in show_data.methodget.query_default %}
-    <form @submit.prevent="submitForm($event)" id="{{ b.pk }}">
+    {% if messages %}
+        <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+	 	{% endfor %}
+	    </ul>
+	{% else %}
+        {% for b in show_data.methodget.query_default %}
+        <form @submit.prevent="submitForm($event)" id="{{ b.pk }}">
         {% csrf_token %}
         <all-reg-forms
                 pk="{{ b.pk }}"
@@ -10,7 +17,8 @@
                 {# which_target="{{ b.which_target }}" #}
                 tx_op="{{ b.tx_op }}"
                 brokerage="{{ b.brokerage }}"
-        ></all-reg-forms>
-    </form>
-{% endfor %}
+         ></all-reg-forms>
+        </form>
+        {% endfor %}
+    {% endif %}
 </div>

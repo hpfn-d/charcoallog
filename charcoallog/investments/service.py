@@ -9,7 +9,7 @@ class ShowData:
         self.newinvestment = NewInvestment.objects.user_logged(request.user)
         self.newinvestmentdetails = NewInvestmentDetails.objects.user_logged(request.user)
         self.methodpost = MethodPost(request, self.newinvestment)
-        self.methodget = MethodGet(self.newinvestment)
+        self.methodget = MethodGet(request, self.newinvestment)
         self.brief_investment = BriefInvestment(
             self.newinvestment,
             self.newinvestmentdetails
