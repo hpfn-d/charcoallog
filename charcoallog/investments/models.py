@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Sum
+from django.db.models import Q, Sum
 
 
 class InvestmentStatementQuerySet(models.QuerySet):
@@ -14,6 +14,15 @@ class InvestmentStatementQuerySet(models.QuerySet):
 
     def kind(self):
         return self.values_list('kind')
+
+    def date_range(self, from_date, to_date):
+        return self.filter(date__gte=from_date, date__lte=to_date)
+
+    def which_field(self, column):
+        # ['date', 'money', 'kind', 'tx_op', 'brokerage']
+        return self.filter(Q(kind=column) | Q(brokerage=column))
+        # | Q(description=column))
+        # .filter(~Q(category__startswith='transfer'))
 
 
 # class NewBasicData(models.Model):

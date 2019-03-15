@@ -44,3 +44,10 @@ class InvestmentDetailsForm(forms.ModelForm):
             form.save()
 
         return form
+
+
+class InvestmentSearchForm(forms.Form):
+    """ Specific Columm """
+    column = forms.CharField(max_length=70, required=True)
+    from_date = forms.DateField(required=True)
+    to_date = forms.DateField(required=True)
