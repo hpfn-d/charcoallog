@@ -2,13 +2,15 @@
     <form method="get">
 	{% csrf_token %}
 	{{ show_data.form2.selectextractform.non_field_errors }}
+
+	{{ form.column.errors }}
 	<span class="form-group">
 		<label></label>
 			<input type="text" class="form-control form-control-sm"
 				   name="column" required>
 		    <span class="small text-muted">search for</span>
 	</span>
-    {# from #}
+
 	{{ form.from_date.errors }}
 	<span class="form-group">
 		<input type="date" name="from_date"
@@ -16,7 +18,7 @@
 			   required>
 		<span class="small text-muted">from date</span>
 	</span>
-    {# to #}
+
 	{{ form.to_date.errors }}
 	<span class="form-group">
 		<input type="date" name="to_date"
@@ -25,7 +27,7 @@
 		<span class="small text-muted">to date</span>
     </span>
 	<br />
-    {{ show_data.form2.selectextractform.errors }}
+    {# {{ show_data.form2.selectextractform.errors }} #}
 	<button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>
