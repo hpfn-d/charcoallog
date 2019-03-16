@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 
 # from charcoallog.investments.detail_post_service import DetailPost
 from charcoallog.investments.forms import (
-    InvestmentDetailsForm, InvestmentForm, InvestmentSearchForm
+    InvestmentDetailsForm, InvestmentSearchForm
 )
 from charcoallog.investments.models import NewInvestment, NewInvestmentDetails
 # from charcoallog.investments.serializers import InvestmentSerializer
@@ -20,9 +20,9 @@ from charcoallog.investments.service import ShowData
 @login_required
 def home(request):
     context = {
-        'form': InvestmentForm,
-        'formd': InvestmentDetailsForm,
-        'form2': InvestmentSearchForm,
+        # 'form': InvestmentForm,
+        'formd': InvestmentDetailsForm(),
+        'form2': InvestmentSearchForm(),
         'show_data': ShowData(request)}
     return render(request, 'investments/home.html', context)
 

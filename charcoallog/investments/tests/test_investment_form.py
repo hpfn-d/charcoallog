@@ -1,21 +1,20 @@
 from django.test import TestCase
 
 from charcoallog.investments.forms import (
-    InvestmentDetailsForm, InvestmentForm, InvestmentSearchForm
+    InvestmentDetailsForm, InvestmentSearchForm
 )
 
-
-class InvestmentFormTest(TestCase):
-    def test_form_has_fields(self):
-        """ Form must have 2 fields. The third field is in test_basicdata_form"""
-        form = InvestmentForm()
-        self.assertSequenceEqual(
-            ['date', 'money', 'kind', 'tx_op', 'brokerage'],
-            list(form.fields)
-        )
-
-    def test_attr_save(self):
-        self.assertTrue(hasattr(InvestmentForm, 'save'))
+# class InvestmentFormTest(TestCase):
+#     def test_form_has_fields(self):
+#         """ Form must have 2 fields. The third field is in test_basicdata_form"""
+#         form = InvestmentForm()
+#         self.assertSequenceEqual(
+#             ['date', 'money', 'kind', 'tx_op', 'brokerage'],
+#             list(form.fields)
+#         )
+#
+#     def test_attr_save(self):
+#         self.assertTrue(hasattr(InvestmentForm, 'save'))
 
 
 class InvestmentDetailsFormTest(TestCase):
