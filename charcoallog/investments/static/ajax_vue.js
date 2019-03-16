@@ -14,6 +14,7 @@ Vue.component('all-reg-forms', {
                 <div @input="n_mn">
                 <input type="number" id="money" name="money" step="0.01" class="form-inline m-0 p-0 bg-light"
                        size="11" style="font-size:10px;border:none"
+                       :style="styleObject"
                        :value="mn"
                        :disabled="edit">
                 </div>
@@ -60,6 +61,16 @@ Vue.component('all-reg-forms', {
             knd: this.kind,
             mn: this.money,
             dt: this.date
+        }
+    },
+    computed: {
+        styleObject() {
+            var font_color = 'black';
+            if (this.mn < 0)
+                font_color = 'red';
+            return {
+                color: font_color
+            };
         }
     },
     methods:{
