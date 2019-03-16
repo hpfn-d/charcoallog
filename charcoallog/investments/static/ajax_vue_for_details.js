@@ -15,6 +15,7 @@ Vue.component('all-detail-forms', {
                 <div @input="n_mn">
                 <input type="text" id="money"class="form-inline m-0 p-0 bg-light"
                        size="11" style="font-size:10px;border:none"
+                       :style="styleObject"
                        :value="mn"
                        :disabled="edit">
                 </div>
@@ -76,6 +77,16 @@ Vue.component('all-detail-forms', {
              mn: this.money,
              dt: this.date
          }
+    },
+    computed: {
+        styleObject() {
+            var font_color = 'red';
+            if (this.mn < 0)
+                font_color = 'blue';
+            return {
+                color: font_color
+            };
+        }
     },
     methods:{
         n_qunt: function(event) {
