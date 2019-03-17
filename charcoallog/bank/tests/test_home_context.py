@@ -65,4 +65,4 @@ class HomeContextTest(TestCase):
         self.assertEqual(zero.brief_bank.whats_left(), 0)
 
     def test_bottom_id(self):
-        self.assertContains(self.response, 'Charcoalog License - GPL-3+')
+        self.assertContains(self.response, 'Charcoallog License - GPL-3+')
