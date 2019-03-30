@@ -47,58 +47,88 @@ class AjaxPostTest(TestCase):
     #     self.assertEqual(405, self.client.get(r('bank:update')).status_code)
 
     def test_ajax_update(self):
+        """
+        Update 'payment' field value
+        'principal started with 10 and now has 20
+        'cartao credito' does not exists after this update
+
+        return values that are used by line1 - brief_bank
+        """
         to_update = dict(
-            # user_name='teste',
             date='2017-12-21',
             money='10.00',
             description='test',
             category='test',
             payment='principal',
-            # update_rm='update',
             pk=2
         )
-        response = self.client.put(r('bank:update'),
+        response = self.client.put(r('bank:home_api', 2),
                                    json.dumps(to_update),
-                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertJSONEqual(
-            response.content,
-            {'accounts': {'principal': {'money__sum': '20'}},
-             'whats_left': '20'}
-        )
+                                   content_type='application/json')
+        self.assertEqual(200, response.status_code)
+
+        expected = [
+            'principal',
+            '20.0',
+            'whats_left',
+            '20.0'
+        ]
+
+        for value in expected:
+            with self.subTest():
+                self.assertIn(value, response.content.decode())
+
+        self.assertNotIn('cartao credito', response.content.decode())
 
     def test_ajax_fail_update(self):
-        self.data['payment'] = 'blablabla'
-        # self.data['update_rm'] = 'update'
+        """
+        Invalid form, empty field
+        """
+        self.data['payment'] = ''
         self.data['pk'] = 1
-        response = self.client.put(r('bank:update'),
+        response = self.client.put(r('bank:home_api', 1),
                                    json.dumps(self.data),
-                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertJSONEqual(
-            response.content,
-            {'accounts': {'blablabla': {'money__sum': '10'},
-                          'cartao credito': {'money__sum': '10'}},
-             'whats_left': '20'}
-        )
+                                   content_type='application/json')
+        self.assertEqual(400, response.status_code)
+
+        expected = [
+            'payment',
+            'This field may not be blank'
+        ]
+
+        for value in expected:
+            with self.subTest():
+                self.assertIn(value, response.content.decode())
 
     def test_form_not_valid(self):
+        """
+         Invalid date - day
+        """
         not_valid = dict(
             date='2017-12-212',
             money='10.00',
             description='test',
             category='test',
             payment='principal',
-            pk='does not matter, data is invalid'
+            pk=1
         )
-        response = self.client.put(r('bank:update'),
+        response = self.client.put(r('bank:home_api', 1),
                                    json.dumps(not_valid),
-                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertJSONEqual(
-            response.content,
-            {'js_alert': True,
-             'message': 'Form is not valid'}
-        )
+                                   content_type='application/json')
+        self.assertEqual(400, response.status_code)
+        expected = [
+            'date',
+            'Date has wrong format'
+        ]
+
+        for value in expected:
+            with self.subTest():
+                self.assertIn(value, response.content.decode())
 
     def test_user_name(self):
+        """
+        Check tests have one user only
+        """
         all_records = Extract.objects.all().count()
         one_user_records = Extract.objects.filter(user_name='teste').count()
         self.assertEqual(all_records, one_user_records)
