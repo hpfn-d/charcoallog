@@ -32,11 +32,13 @@
 {% endblock %}
 
 {% block head_javascript %}
-{# ajax files for line3.html #}
-{# <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> #}
-{# <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"> #}
-{# <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> #}
-<script type="text/javascript" src="{% static 'django_csrf.js' %}"></script>
-<script type="text/javascript" src="{% static 'ajax_core.js' %}"></script>
-{% endblock %}
+{# JQuery ajax files for line3.html #}
+{# <script type="text/javascript" src="{% static 'django_csrf.js' %}"></script> #}
+{# <script type="text/javascript" src="{% static 'ajax_core.js' %}"></script> #}
 
+{# Vue ajax for line3.html #}
+<script src="https://unpkg.com/vue@2.5.17/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="{% static 'bank_ajax_vue.js' %}"></script>
+{# <script src="{% static 'invest_form1_vue.js' %}"></script> #}
+{% endblock %}

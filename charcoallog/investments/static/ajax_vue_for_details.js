@@ -60,7 +60,8 @@ Vue.component('all-detail-forms', {
                 </div>
 
                 <!--<div v-if="chk == true" class="form-inline m-0 p-0">-->
-                <button type="submit" class="btn btn-sm m-0 p-0 btn-link" size="8" id="button" @click="dflt()">{{ method }}</button>
+                <div class="form-inline m-0 p-0">
+                <button type="submit" class="btn btn-sm m-0 p-0 btn-link" size="6" id="button" @click="dflt()">{{ method }}</button>
                 </div>
             </div>
     `,

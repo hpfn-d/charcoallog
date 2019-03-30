@@ -1,4 +1,4 @@
-import json
+# import json
 
 from django.contrib.auth.models import User
 from django.shortcuts import resolve_url as r
@@ -40,19 +40,25 @@ class AjaxPostTest(TestCase):
     def test_login_ok(self):
         self.assertTrue(self.login_in)
 
+    def test_count_records(self):
+        self.assertEqual(2, Extract.objects.filter(user_name='teste').count())
+
     def test_ajax_remove(self):
+        """
+        Delete first record - payment == principal
+        4 asserts
+        Return empty content - 204
+        Only one record now
+        No payment principal
+        Check response content
+        """
         obj = Extract.objects.get(**self.data)
 
-        # self.data['update_rm'] = 'remove'
         self.data['pk'] = obj.pk
-        # response = self.client.post('/bank/delete/',
-        #                             self.data,
-        #                             HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        response = self.client.delete(r('bank:delete'),
-                                      json.dumps(self.data),
-                                      HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertJSONEqual(
-            response.content,
-            {'accounts': {'cartao credito': {'money__sum': '10'}},
-             'whats_left': '10'}
-        )
+        response = self.client.delete(r('bank:home_api', obj.pk))
+
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(1, Extract.objects.filter(user_name='teste').count())
+        self.assertEqual(0, Extract.objects.filter(payment='principal').count())
+        # response is empty after delete
+        self.assertFalse(response.content.decode())

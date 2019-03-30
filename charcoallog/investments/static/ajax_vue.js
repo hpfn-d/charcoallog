@@ -47,7 +47,7 @@ Vue.component('all-reg-forms', {
 
 
                 <div v-if= "kind != '---'" class="form-inline m-0 p-0">
-                <button type="submit" class="btn btn-sm m-0 p-0 btn-link" id="button" size="6">{{ method }}</button>
+                <button type="submit" class="btn btn-sm m-0 p-0 btn-link" id="button" size="6" @click="dflt()">{{ method }}</button>
                 </div>
             </div>
     `,
@@ -92,7 +92,6 @@ Vue.component('all-reg-forms', {
         dflt: function() {
             this.chk = false
         },
-
         label: function(){
              this.method = this.chk ? 'update' : 'delete';
              this.edit = this.chk == false ? true : false
@@ -113,9 +112,9 @@ new Vue({
             form["money"] = Number(event.target.money.value);
             form["date"] = event.target.date.value;
 
-            if ( form['kind'].search('transfer') == -1 && kind != '---' ) {
-                event.target.checkbox.checked = false
-            }
+            //if ( form['kind'].search('transfer') == -1 && kind != '---' ) {
+            //    event.target.checkbox.checked = false
+            //}
 
             http_verb = event.target.button.innerText
             console.log(http_verb)

@@ -83,64 +83,22 @@
         </font>
         </div>
 
-        {% for b in show_data.form2.query_default %}
-        <form method="post" id="{{ b.id }}">
-        {% csrf_token %}
-        <div class="form-inline m-0 p-0">
+        <div id="vue_ajax"> {# class="scroll" id="vue_ajax"> #}
 
-        <table>
-            <tr>
-                <td>
-                    <input type="hidden" name="pk" id="id" value="{{ b.id }}" />
-                </td>
-                <td>
-                    <input type="date" id="date" name="date"
-                           class="form-inline m-0 p-0 bg-light"
-                           size="11" style="font-size:10px;border:none"
-                           value='{{ b.date|date:"Y-m-d" }}' readonly>
-                </td>
-                <td>
-                    <input type="text" id="money" name="money" id="id_money"
-                           class="form-inline m-0 p-0 bg-light"
-                           size="11"
-                           {% if b.money < 0 %} style="font-size:10px;color:red;border:none"
-                           {% else %} style="font-size:10px;border:none"
-                           {% endif %}
-                           value="{{ b.money }}" readonly>
-                </td>
-                <td>
-                    <input type="text" id="description" name="description"
-                           class="form-inline m-0 p-0 bg-light"
-                           size="20" style="font-size:10px;border:none"
-                           value="{{ b.description }}" readonly>
-                </td>
-                <td>
-                    <input type="text" id="category" name="category"
-                           class="form-inline m-0 p-0 bg-light"
-                           size="20" style="font-size:10px;border:none"
-                           value="{{ b.category }}" readonly>
-                </td>
-                <td>
-                    <input type="text" id="payment" name="payment"
-                           class="form-inline m-0 p-0 bg-light"
-                           size="20" style="font-size:10px;border:none"
-                           value="{{ b.payment }}" readonly>
-                </td>
-                <td>
-                    <input type='checkbox' id='checkbox' value='update' name='update'>update
-                <td>
-                    <font size="2">
-                    {# tem que colocar uma identificação aqui no botao #}
-                    {# ou usar o inverso de .parent(s) do JS #}
-                    <button type='submit' style="font-size:9px" >Delete</button>
-		            </font>
-                </td>
-            </tr>
-        </table>
+                {% for b in show_data.form2.query_default %}
+                <form @submit.prevent="submitForm($event)" id="{{ b.pk }}">
+                {% csrf_token %}
+                <all-reg-forms
+                        pk="{{ b.pk }}"
+                        date="{{ b.date|date:'Y-m-d' }}"
+                        money="{{ b.money }}"
+                        description="{{ b.description }}"
+                        category="{{ b.category }}"
+                        payment="{{ b.payment }}"
+                 ></all-reg-forms>
+                </form>
+                {% endfor %}
+
         </div>
-    </form>
-    {% endfor %}
-    <br />
-
-    {% endif %}
+ {% endif %}
 </div>
