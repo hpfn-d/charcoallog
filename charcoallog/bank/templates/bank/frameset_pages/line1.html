@@ -1,40 +1,47 @@
- <div class="col-md-12">
+<div class="col-md-12" id="line1_accounts">
 	<ul class="nav nav-pills border">
 		<li class="nav-item nav-link text-muted">
 			 {% if show_data.brief_bank.account_names.items %}
 			what's left<br>
-			<div id="left">
+			<div id="left" :style="styleObject">
 				<font size="2">
-					{% if show_data.brief_bank.whats_left < 0 %}
-					<font color="red">
-						{{ show_data.brief_bank.whats_left }}
-					</font>
-					{% else %}
 					{{ show_data.brief_bank.whats_left }}
-					{% endif %}
 				</font>
 			</div>
 			{% endif %}
 		</li>
 
-
 		{% for key, value in show_data.brief_bank.account_names.items %}
-		<li class="nav-item nav-link text-muted" id="{{ key }}{{ key }}">
-			<div class="{{ key }}">
-			    {{ key }}<br>
-			    <div id="{{ key }}">
-				 {% if value.money__sum < 0 %}
-				<font size="2" color="red">
-					{{ value.money__sum }}
-				</font>
-				{% else %}
-				<font size="2">
-					{{ value.money__sum }}
-				</font>
-				</div>
-				{% endif %}
-			</div>
+		<li class="nav-item nav-link text-muted" id="{{ key }}{{ key }}" @click="account_call($event)">
+
+			{{ key }}
+			<br>
+			    <span id="{{ key }}" :style="styleObject" @click="isActive($event)">
+				    {{ value.money__sum }}
+				</span>
+
 		</li>
 		{% endfor %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	</ul>
+
 </div>
