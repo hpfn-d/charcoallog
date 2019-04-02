@@ -127,7 +127,7 @@ new Vue({
     methods: {
         submitForm: function(old_money, event) {
             var form = {}
-            form["pk"] = event.target.pk.value;
+            form["pk"] = Number(event.target.pk.value);
             form['quant'] = Number(event.target.quant.value);
             form["tx_or_price"] = Number(event.target.tx_or_price.value);
             form["segment"] = event.target.segment.value;

@@ -50,7 +50,7 @@ var bank_ajax = new Vue({
             var old_payment = event.target.old_payment.value;
 
             var form = {}
-            form["pk"] = event.target.pk.value
+            form["pk"] = Number(event.target.pk.value)
             form["category"] = event.target.category.value;
             form["payment"] = event.target.payment.value;
             form["description"] = event.target.description.value;
