@@ -104,7 +104,7 @@ new Vue({
     methods: {
         submitForm: function(event) {
             var form = {}
-            form["pk"] = event.target.pk.value
+            form["pk"] = Number(event.target.pk.value)
 
             form["tx_op"] = event.target.tx_op.value;
             form["brokerage"] = event.target.brokerage.value;
