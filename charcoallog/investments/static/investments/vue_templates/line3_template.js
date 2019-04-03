@@ -3,7 +3,7 @@ Vue.component('all-reg-forms', {
     template:`
             <div class="form-inline m-0 p-0">
                 <input type="hidden" id="pk" name="pk" :value="pk">
-                
+
                 <div @input="n_dt">
                 <input type="date" id="date" class="form-inline m-0 p-0 bg-light"
                        size="11" style="font-size:10px;border:none"
@@ -32,7 +32,7 @@ Vue.component('all-reg-forms', {
                        :value="tx_p"
                        :disabled="edit">
                 </div>
-                
+
                 <div @input="n_brkrg">
                 <input type="text" id="brokerage" class="form-inline m-0 p-0 bg-light"
                        size="15" style="font-size:10px;border:none"
@@ -98,45 +98,3 @@ Vue.component('all-reg-forms', {
         },
     },
 });
-
-new Vue({
-    el: "#vue_ajax",
-    methods: {
-        submitForm: function(event) {
-            var form = {}
-            form["pk"] = Number(event.target.pk.value)
-
-            form["tx_op"] = event.target.tx_op.value;
-            form["brokerage"] = event.target.brokerage.value;
-            form["kind"] = event.target.kind.value;
-            form["money"] = Number(event.target.money.value);
-            form["date"] = event.target.date.value;
-
-            //if ( form['kind'].search('transfer') == -1 && kind != '---' ) {
-            //    event.target.checkbox.checked = false
-            //}
-
-            http_verb = event.target.button.innerText
-            console.log(http_verb)
-            http_verb = http_verb == 'delete' ? 'delete' : 'put'
-
-            axios.defaults.xsrfHeaderName = "X-CSRFToken";
-            axios.defaults.xsrfCookieName = "csrftoken";
-
-            axios({
-                method: http_verb,
-                url: 'home_api/' + form["pk"] + '/',
-                data: form
-            }).then(response => {
-                console.log("HERE")
-                if ( http_verb == 'delete') {
-                    document.getElementById(form["pk"]).remove()
-                }
-                // Update line1 data missing
-            })
-            .catch(function (err) {
-                consolelog(err.message);
-            })
-        }
-    }
-})
