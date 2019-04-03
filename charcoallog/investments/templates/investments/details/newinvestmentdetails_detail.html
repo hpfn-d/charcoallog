@@ -19,15 +19,16 @@
             </div>
             <div class="col-md-9">
                 <div class="container">
-                <div class="row">
+                    <div class="row">
                     a ser implementado
                     {# {% include 'investments/frameset_pages/line1.html' %} #}
+                    </div>
                 </div>
-		</div>
-		<div class="container">
-                <div class="row justify-content-center align-center m-0 bg-light">
-                    <div class="container bg-white">
-                        <ul class="nav nav-pills">
+
+		        <div class="container">
+                    <div class="row justify-content-center align-center m-0 bg-light">
+                        <div class="container bg-white">
+                            <ul class="nav nav-pills">
                             <li class="nav-item nav-link text-muted"><small>date</small></li>
                             <li class="nav-item nav-link text-muted"><small>money</small></li>
                             <li class="nav-item nav-link text-muted"><small>kind</small></li>
@@ -36,13 +37,11 @@
                             <li class="nav-item nav-link text-muted"><small>tx_or_price</small></li>
                             <li class="nav-item nav-link text-muted"><small>quant</small></li>
                         </ul>
-                    </div>
+                        </div>
 
-                    {# there is no API for that yet #}
-                    {# VUE build this fine. That's all #}
                     <div class="scroll" id="vue_ajax_detail">
-                    {% for item in newinvestmentdetails %}
-                        <form @submit.prevent="submitForm({{ item.money }}, $event)" id="{{ item.pk }}">
+                        {% for item in newinvestmentdetails %}
+                            <form @submit.prevent="submitForm({{ item.money }}, $event)" id="{{ item.pk }}">
                             {% csrf_token %}
                             <all-detail-forms
                                     pk="{{ item.pk }}"
@@ -55,9 +54,11 @@
                                     quant="{{ item.quant }}"
                             ></all-detail-forms>
                         </form>
-                    {% endfor %}
+                        {% endfor %}
                     </div>
                 </div>
+            </div>
+            </div>
 		</div>
     </div>
 </div>
@@ -66,5 +67,6 @@
 {% block head_javascript %}
 <script src="https://unpkg.com/vue@2.5.17/dist/vue.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="{% static 'ajax_vue_for_details.js' %}"></script>
+<script src="{% static 'investments/vue_templates/details_template.js' %}"></script>
+<script src="{% static 'investments/details_ajax_vue.js' %}"></script>
 {% endblock %}
