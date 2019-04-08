@@ -1,5 +1,8 @@
+import json
 from decimal import Decimal
 
+from django.contrib.auth.models import User
+from django.shortcuts import resolve_url as r
 from django.test import TestCase
 
 from charcoallog.bank.brief_bank_service import BriefBank
@@ -22,6 +25,7 @@ class BriefScheduleTest(TestCase):
         Schedule.objects.create(**data)
         query_user = Schedule.objects.user_logged(user_name)
         self.response = BriefBank(query_user)
+        # must execute account_names() to produce values for whats_left
         self.brief_schedule_account_name = self.response.account_names()
 
     def test_schedule_names(self):
@@ -34,3 +38,86 @@ class BriefScheduleTest(TestCase):
             (account_values)
         """
         self.assertEqual(self.response.whats_left(), Decimal('10.00'))
+
+
+class UpdateScheduleApi(TestCase):
+    def setUp(self):
+        user_name = 'teste'
+
+        user = User.objects.create(username=user_name)
+        user.set_password('1m2n3b4v')
+        user.save()
+
+        self.login_in = self.client.login(username=user_name, password='1m2n3b4v')
+
+        data = dict(
+            user_name=user_name,
+            date='2017-12-21',
+            money='10.00',
+            description='test',
+            category='test',
+            payment='principal'
+        )
+
+        Schedule.objects.create(**data)
+        data['money'] = '20.00'
+        self.response = self.client.put(r('bank:schedule_api', 1),
+                                        json.dumps(data),
+                                        content_type='application/json')
+
+    def test_login(self):
+        self.assertTrue(self.login_in)
+
+    def test_status_code(self):
+        self.assertEqual(200, self.response.status_code)
+
+    def test_data_exists(self):
+        self.assertTrue(Schedule.objects.filter(pk=1).exists())
+
+    def test_json_data(self):
+        """
+            whats_left attribute must be 20.00 now
+        """
+        expected = [
+            'principal',
+            '20.0',
+            'whats_left',
+            '20.0'
+        ]
+
+        for value in expected:
+            with self.subTest():
+                self.assertIn(value, self.response.content.decode())
+
+
+class DeleteScheduleApi(TestCase):
+    def setUp(self):
+        user_name = 'teste'
+
+        user = User.objects.create(username=user_name)
+        user.set_password('1m2n3b4v')
+        user.save()
+
+        self.login_in = self.client.login(username=user_name, password='1m2n3b4v')
+
+        data = dict(
+            user_name=user_name,
+            date='2017-12-21',
+            money='10.00',
+            description='test',
+            category='test',
+            payment='principal'
+        )
+
+        Schedule.objects.create(**data)
+        data['money'] = '20.00'
+        self.response = self.client.delete(r('bank:schedule_api', 1))
+
+    def test_login(self):
+        self.assertTrue(self.login_in)
+
+    def test_status_code(self):
+        self.assertEqual(204, self.response.status_code)
+
+    def test_data_in_db(self):
+        self.assertFalse(Schedule.objects.all().exists())

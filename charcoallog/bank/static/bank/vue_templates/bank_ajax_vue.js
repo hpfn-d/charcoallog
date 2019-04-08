@@ -1,5 +1,5 @@
 Vue.component('all-reg-forms', {
-    props: ['pk', 'date', 'money', 'description', 'category', 'payment'],
+    props: ['color', 'pk', 'date', 'money', 'description', 'category', 'payment'],
     template:`
             <div class="form-inline m-0 p-0">
                 <input type="hidden" id="pk" name="pk" :value="pk">
@@ -60,7 +60,8 @@ Vue.component('all-reg-forms', {
             ctgr: this.category,
             dscrptn: this.description,
             mn: this.money,
-            dt: this.date
+            dt: this.date,
+            //color: this.color
         }
     },
     computed: {
@@ -69,7 +70,7 @@ Vue.component('all-reg-forms', {
             if (this.mn < 0)
                 font_color = 'red';
             return {
-                color: font_color
+                color: this.color ? this.color : font_color
             };
         }
     },

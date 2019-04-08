@@ -42,7 +42,7 @@ var brief = new Vue({
     },
 });
 
-
+// line3 - in Extract db
 var bank_ajax = new Vue({
     el: "#vue_ajax",
     methods: {
@@ -61,7 +61,6 @@ var bank_ajax = new Vue({
             // change button too. After http_verb
 
             http_verb = event.target.button.innerText
-            //console.log(http_verb)
             http_verb = http_verb == 'delete' ? 'delete' : 'put'
 
             axios.defaults.xsrfHeaderName = "X-CSRFToken";
@@ -128,4 +127,47 @@ var bank_ajax = new Vue({
     }
 })
 
+// line3 - in Schedule
+var schedule_ajax = new Vue({
+    el: "#vue_schedule_ajax",
+    data: {
+        display_future: false
+    },
+    methods: {
+        submitForm: function(event) {
+            var form = {}
+            form["pk"] = Number(event.target.pk.value)
+            form["money"] = Number(event.target.money.value);
 
+            // vue 2.6.0
+            //event.target.checkbox.checked = false
+            // change button too. After http_verb
+
+            http_verb = event.target.button.innerText
+            http_verb = http_verb == 'delete' ? 'delete' : 'put'
+
+            axios.defaults.xsrfHeaderName = "X-CSRFToken";
+            axios.defaults.xsrfCookieName = "csrftoken";
+
+            axios({
+                method: http_verb,
+                url: 'schedule_api/' + form["pk"] + '/',
+                data: form
+            }).then(response => {
+                if ( http_verb == 'delete' && response.status == 204) {
+                    var current_whats_left_value = Number(document.getElementById("schedule_whats_left").textContent)
+                    var left_atual_value = parseFloat(current_whats_left_value - form["money"])
+                    document.getElementById("schedule_whats_left").textContent = left_atual_value
+
+                    document.getElementById(form["pk"]).remove()
+                }
+                if ( http_verb == 'put' && response.status == 200) {
+                    document.getElementById('schedule_whats_left').textContent =response.data.whats_left
+                }
+            })
+            .catch(function (err) {
+                console.log(err.message);
+            })
+        }
+    }
+})
