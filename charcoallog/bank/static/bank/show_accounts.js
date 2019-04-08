@@ -137,7 +137,11 @@ var schedule_ajax = new Vue({
         submitForm: function(event) {
             var form = {}
             form["pk"] = Number(event.target.pk.value)
-            form["money"] = Number(event.target.money.value);
+            form["category"] = event.target.category.value
+            form["payment"] = event.target.payment.value
+            form["description"] = event.target.description.value
+            form["money"] = Number(event.target.money.value)
+            form["date"] = event.target.date.value
 
             // vue 2.6.0
             //event.target.checkbox.checked = false
