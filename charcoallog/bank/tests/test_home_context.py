@@ -37,12 +37,12 @@ class HomeContextTest(TestCase):
         """" Html must contain input tags at first time """
         tags = (
             ('<form', 2),
-            ('<input', 16),
+            ('<input', 15),
             ('<select', 0),
             ('type="text"', 8),
             ('type="number"', 1),
             ('step="0.01"', 1),
-            ('<button', 2),
+            ('<button', 3),
             ('type="submit"', 2)
         )
         for text, count in tags:
