@@ -1,12 +1,10 @@
 <div class="col-md-12" id="line1_accounts">
 	<ul class="nav nav-pills border">
-		<li class="nav-item nav-link text-muted">
+		<li class="nav-item nav-link">
 			 {% if show_data.brief_bank.account_names.items %}
 			what's left<br>
 			<div id="left" :style="styleObject">
-				<font size="2">
-					{{ show_data.brief_bank.whats_left | floatformat:2 }}
-				</font>
+				{{ show_data.brief_bank.whats_left | floatformat:2 }}
 			</div>
 			{% endif %}
 		</li>
