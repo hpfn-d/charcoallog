@@ -108,7 +108,7 @@ var bank_ajax = new Vue({
                             var new_account = document.createElement('li');
 
                             new_account.id = index+index;
-                            new_account.className = 'nav-item nav-link text-muted';
+                            new_account.className = 'nav-item nav-link';
                             var text = index + '<br><span id="' + index +'">' + value['money__sum'] + '</span>'
                             new_account.innerHTML = text;
                             var t = document.getElementsByTagName('ul')[1].appendChild(new_account);

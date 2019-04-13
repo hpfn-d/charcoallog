@@ -6,6 +6,7 @@ Vue.component('all-reg-forms', {
 
                 <div @input="n_dt">
                 <input type="date" id="date" class="form-inline m-0 p-0 bg-light"
+                       :class="{ 'text-muted': isNaN(money)}"
                        size="11" style="font-size:10px;border:none"
                        :value="dt" :disabled="edit"
                        required>
@@ -13,6 +14,7 @@ Vue.component('all-reg-forms', {
 
                 <div @input="n_mn">
                 <input type="text" id="money" name="money" step="0.01" class="form-inline m-0 p-0 bg-light"
+                       :class="{ 'text-muted': isNaN(money)}"
                        size="11" style="font-size:10px;border:none"
                        :style="styleObject"
                        :value="mn" :disabled="edit"
@@ -21,6 +23,7 @@ Vue.component('all-reg-forms', {
 
                 <div @input="n_description">
                 <input type="text"  id="description" name="description" class="form-inline m-0 p-0 bg-light"
+                       :class="{ 'text-muted': isNaN(money)}"
                        size="20" style="font-size:10px;border:none"
                        :value="dscrptn" :disabled="edit"
                        required>
@@ -28,6 +31,7 @@ Vue.component('all-reg-forms', {
 
                 <div @input="n_category">
                 <input type="text"  id="category" name="category" class="form-inline m-0 p-0 bg-light"
+                       :class="{ 'text-muted': isNaN(money)}"
                        size="20" style="font-size:10px;border:none"
                        :value="ctgr" :disabled="edit"
                        required>
@@ -35,18 +39,19 @@ Vue.component('all-reg-forms', {
 
                 <div @input="n_payment">
                 <input type="text" id="payment" name="payment" class="form-inline m-0 p-0 bg-light"
+                       :class="{ 'text-muted': isNaN(money)}"
                        size="20" style="font-size:10px;border:none"
                        :value="pmnt" :disabled="edit"
                        required>
                 <input type="hidden" :value=this.payment name="old_payment">
                 </div>
 
-                <div class="form-inline m-0 p-0 bg-light">
+                <div class="form-inline m-0 p-0 bg-light" v-if="!isNaN(mn)">
                 <input type="checkbox" id="checkbox" v-model:value="chk" v-bind="label()">
                 <span class="form-text text-muted" style="font-size:9px">update</span>
                 </div>
 
-                <div class="form-inline m-0 p-0">
+                <div class="form-inline m-0 p-0" v-if="!isNaN(mn)">
                 <button type="submit" class="btn btn-sm m-0 p-0 btn-link" id="button" size="6" @click="dflt()">{{ method }}</button>
                 </div>
             </div>
@@ -72,7 +77,7 @@ Vue.component('all-reg-forms', {
             return {
                 color: this.color ? this.color : font_color
             };
-        }
+        },
     },
     methods:{
         n_category: function(event) {
