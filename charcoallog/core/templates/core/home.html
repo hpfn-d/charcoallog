@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
 <div class="container" align="center">
@@ -12,4 +13,9 @@
         {% include './frameset_pages/line3.html' %}
     </div>
 </div>
+{% endblock %}
+
+{% block head_javascript %}
+<script src="https://unpkg.com/vue@2.5.22/dist/vue.js"></script>
+<script src="{% static 'vue_style.js' %}"></script>
 {% endblock %}

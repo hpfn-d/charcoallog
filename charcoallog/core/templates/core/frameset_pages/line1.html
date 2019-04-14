@@ -1,38 +1,18 @@
-<div id="box_line1">
+<div id="core_line1_accounts">
 	<table align="left" cellpadding="10">
             <tr>
-            {% for key, value in build_home.line1.account_names.items %}
-                <td align="center">
-					<div class="{{ key }}">
-					<b>{{ key }}</b> <br>
-					<div id="{{ key }}">
-						{% if value.money__sum < 0 %}
-						<font size="2" color="red">
-							{{ value.money__sum }}
-						</font>
-						{% else %}
-						<font size="2">
-							{{ value.money__sum }}
-						</font>
-						{% endif %}
-					</div>
-					</div>
-		        </td>
-            {% endfor %}
-                <td align="center">
-				<font size="2"><b>what's left</b></font> <br>
-			    <div id="left">
-					<font size="2">
-			    {% if build_home.line1.whats_left < 0 %}
-	                <font color="red">
-				    {{ build_home.line1.whats_left }}
-		            </font>
-			    {% else %}
-			        {{ build_home.line1.whats_left }}
-			    {% endif %}
-		        </font>
-				</div>
-		        </td>
+            {% for key, value in names.items %}
+                <core_line1
+					key_="{{ key }}"
+					val="{{ value.money__sum | floatformat:2 }}"
+				></core_line1>
+			{% endfor %}
+
+			    <core_line1
+					key_="what's left"
+					val="{{ wht_l | floatformat:2 }}"
+				></core_line1>
+
             </tr>
        </table>
 </div>
