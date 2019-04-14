@@ -1,36 +1,35 @@
 <div id="box_line2">
   <table align="left" cellpadding="10">
         <tr>
-            {% for key, value in build_home.line2.brokerage.items %}
+            {% for key, value in brokerage.items %}
             <td align="center">
-                <div>
-                    <b>{{ key }}</b> <br>
-                    <div>
+
+                    {{ key }}<br>
+
                         {% if value < 0 %}
-                        <font size="2" color="red">
-                            {{ value }}
-                        </font>
+                            <font size="2px" color="red">
+                                {{ value | floatformat:2 }}
                         {% else %}
-                        <font size="2">
-                            {{ value }}
-                        </font>
+                            <font size="2px">
+                                {{ value | floatformat:2 }}
                         {% endif %}
-                    </div>
-                </div>
+                            </font>
+
+
             </td>
             {% endfor %}
 
-            {% for key, value in build_home.line2.kind_investmentdetail.items %}
+            {% for key, value in investdetail.items %}
             <td align="center">
-                <div>
+
                     <a href="{% url 'investments:details' key %}">
                     {{ key }}<br>
-                       in Details
+                        <font size="2px">in Details</font>
                     </a>
-                </div>
+
             </td>
             {% endfor %}
-            </td>
+
         </tr>
     </table>
 </div>
