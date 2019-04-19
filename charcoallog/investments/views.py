@@ -31,8 +31,7 @@ def home(request):
 def newinvestmetdetails_detail(request, kind):
     # post = DetailPost(request)  # noqa F841
 
-    qs_kind_details = NewInvestmentDetails.objects.user_logged(request.user).filter(
-        kind=kind)
+    qs_kind_details = NewInvestmentDetails.objects.user_logged(request.user).kind(kind)
 
     context = {
         'newinvestmentdetails': qs_kind_details,
