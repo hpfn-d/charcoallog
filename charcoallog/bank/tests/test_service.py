@@ -1,5 +1,7 @@
 # from collections import OrderedDict
+from collections import OrderedDict
 from decimal import Decimal
+from unittest.mock import patch
 
 from django.db.models import QuerySet
 from django.test import TestCase
@@ -16,15 +18,17 @@ class RQST:
 
 
 class ServiceLayerTest(TestCase):
-    def setUp(self):
+    @patch('charcoallog.bank.service.date')
+    def setUp(self, date):
         user_name = 'teste'
+        self.category = 'test'
         self.account_name = 'principal'
         data = dict(
             user_name=user_name,
             date='2017-12-21',
             money='10.00',
             description='test',
-            category='test',
+            category=self.category,
             payment=self.account_name
         )
         others_data = dict(
@@ -32,7 +36,7 @@ class ServiceLayerTest(TestCase):
             date='2017-12-21',
             money='100.00',
             description='test',
-            category='test',
+            category=self.category,
             payment=self.account_name
         )
         Schedule.objects.create(**data)
@@ -44,6 +48,7 @@ class ServiceLayerTest(TestCase):
         RQST.GET = search_data
         RQST.POST = dict()
         RQST.user = user_name
+        date.today.return_value.strftime.return_value = '2017-12-01'
         self.response = ShowData(RQST)
 
     def test_query_user_instance(self):
@@ -87,3 +92,16 @@ class ServiceLayerTest(TestCase):
         """
         self.response.brief_schedule.account_names()
         self.assertEqual(self.response.brief_schedule.whats_left(), Decimal('10.00'))
+
+    def test_summary_instance(self):
+        self.assertIsInstance(self.response.summary_categories, OrderedDict)
+
+    def test_summary_account_names(self):
+        self.assertIn(self.category, self.response.summary_categories)
+
+    def test_summary_account_names_values(self):
+        """
+        user test only has 10
+        user other has 100
+        """
+        self.assertIn({'money__sum': Decimal('10')}, self.response.summary_categories.values())

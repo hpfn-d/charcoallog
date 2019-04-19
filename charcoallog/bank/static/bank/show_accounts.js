@@ -1,5 +1,11 @@
 var bus = new Vue({});
 
+var summary = new Vue({
+    el: '#month_summary_category',
+    data: {
+        out: '',
+    }
+});
 
 var brief = new Vue({
     el: "#line1_accounts",
