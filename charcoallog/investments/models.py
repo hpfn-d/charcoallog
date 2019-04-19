@@ -12,8 +12,15 @@ class InvestmentStatementQuerySet(models.QuerySet):
     def brokerage(self):
         return self.values_list('brokerage')
 
-    def kind(self):
-        return self.values_list('kind')
+    def kind(self, k='kind'):
+        """
+        if kind is default get all values from column
+        else filter by value set by user
+        """
+        if k == 'kind':
+            return self.values_list(k)
+        else:
+            return self.filter(kind=k)
 
     def date_range(self, from_date, to_date):
         return self.filter(date__gte=from_date, date__lte=to_date)
