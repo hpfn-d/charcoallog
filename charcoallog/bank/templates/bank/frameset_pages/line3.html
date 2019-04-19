@@ -51,6 +51,30 @@
         </div>
         {# ends Schedule stuff #}
 
+        {# summary does not update yet #}
+        <div id="month_summary_category">
+            <font size="1px" class="text-muted">
+                month summary by category
+                <ul class="nav nav-pills border">
+                    {% for key, value in show_data.summary_categories.items %}
+                    <summary-tpl
+                        k_="{{ key }}"
+                        vl_="{{ value.money__sum | floatformat:2 }}"
+                    ></summary-tpl>
+
+                    {# <li class="nav-item nav-link text-muted" id="summary1_{{ key }}"> #}
+                    {#     {{ key }}<br> #}
+                    {#     <span id="summary2_{{ key }}"> #}
+                    {#         {{ value.money__sum | floatformat:2 }} #}
+                    {#     </span> #}
+                    {#     </li> #}
+
+                    {% endfor %}
+                </ul>
+            </font>
+        </div>
+
+
 
         <div id="total">
         <font size="1px">
