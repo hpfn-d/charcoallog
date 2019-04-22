@@ -1,12 +1,17 @@
 Vue.component('all-reg-forms', {
-    props: ['color', 'pk', 'date', 'money', 'description', 'category', 'payment'],
+    //props: ['color', 'csrf','pk', 'date', 'money', 'description', 'category', 'payment'],
+    props: ['color', 'csrf', 'data'],
     template:`
+            <form @submit.prevent="submitForm($event)" :id="pk">
+
             <div class="form-inline m-0 p-0">
+
+                <input type="hidden" name="csrfmiddlewaretoken" :value="token">
                 <input type="hidden" id="pk" name="pk" :value="pk">
 
                 <div @input="n_dt">
                 <input type="date" id="date" class="form-inline m-0 p-0 bg-light"
-                       :class="{ 'text-muted': isNaN(money)}"
+                       :class="{ 'text-muted': isNaN(data.fields.money)}"
                        size="11" style="font-size:10px;border:none"
                        :value="dt" :disabled="edit"
                        required>
@@ -14,7 +19,7 @@ Vue.component('all-reg-forms', {
 
                 <div @input="n_mn">
                 <input type="text" id="money" name="money" step="0.01" class="form-inline m-0 p-0 bg-light"
-                       :class="{ 'text-muted': isNaN(money)}"
+                       :class="{ 'text-muted': isNaN(data.fields.money)}"
                        size="11" style="font-size:10px;border:none"
                        :style="styleObject"
                        :value="mn" :disabled="edit"
@@ -23,7 +28,7 @@ Vue.component('all-reg-forms', {
 
                 <div @input="n_description">
                 <input type="text"  id="description" name="description" class="form-inline m-0 p-0 bg-light"
-                       :class="{ 'text-muted': isNaN(money)}"
+                       :class="{ 'text-muted': isNaN(data.fields.money)}"
                        size="20" style="font-size:10px;border:none"
                        :value="dscrptn" :disabled="edit"
                        required>
@@ -31,7 +36,7 @@ Vue.component('all-reg-forms', {
 
                 <div @input="n_category">
                 <input type="text"  id="category" name="category" class="form-inline m-0 p-0 bg-light"
-                       :class="{ 'text-muted': isNaN(money)}"
+                       :class="{ 'text-muted': isNaN(data.fields.money)}"
                        size="20" style="font-size:10px;border:none"
                        :value="ctgr" :disabled="edit"
                        required>
@@ -39,11 +44,11 @@ Vue.component('all-reg-forms', {
 
                 <div @input="n_payment">
                 <input type="text" id="payment" name="payment" class="form-inline m-0 p-0 bg-light"
-                       :class="{ 'text-muted': isNaN(money)}"
+                       :class="{ 'text-muted': isNaN(data.fields.money)}"
                        size="20" style="font-size:10px;border:none"
                        :value="pmnt" :disabled="edit"
                        required>
-                <input type="hidden" :value=this.payment name="old_payment">
+                <input type="hidden" :value=this.data.fields.payment name="old_payment">
                 </div>
 
                 <div class="form-inline m-0 p-0 bg-light" v-if="!isNaN(mn)">
@@ -55,25 +60,25 @@ Vue.component('all-reg-forms', {
                 <button type="submit" class="btn btn-sm m-0 p-0 btn-link" id="button" size="6" @click="dflt()">{{ method }}</button>
                 </div>
             </div>
+            </form>
     `,
     data: function() {
         return {
             method: 'delete',
             edit: true,
             chk: false,
-            pmnt: this.payment,
-            ctgr: this.category,
-            dscrptn: this.description,
-            mn: this.money,
-            dt: this.date,
-            //color: this.color
+            token: this.csrf,
+            pmnt: this.data.fields.payment,
+            ctgr: this.data.fields.category,
+            dscrptn: this.data.fields.description,
+            mn: this.data.fields.money,
+            dt: this.data.fields.date,
+            pk: this.data.pk
         }
     },
     computed: {
         styleObject() {
-            var font_color = 'black';
-            if (this.mn < 0)
-                font_color = 'red';
+            var font_color =  this.mn > 0 ?  'black' : 'red';
             return {
                 color: this.color ? this.color : font_color
             };
@@ -99,8 +104,103 @@ Vue.component('all-reg-forms', {
             this.chk = false
         },
         label: function(){
-             this.method = this.chk ? 'update' : 'delete';
-             this.edit = this.chk == false ? true : false
+            this.method = this.chk ? 'update' : 'delete';
+            this.edit = this.chk == false ? true : false
+        }, // schedule stuff - axios
+        schedule_del: function(money, pk){
+            var current_whats_left_value = Number(document.getElementById("schedule_whats_left").textContent)
+            var left_atual_value = parseFloat(current_whats_left_value - money)
+
+            document.getElementById("schedule_whats_left").textContent = left_atual_value
+            document.getElementById(pk).remove()
         },
+        schedule_put: function(w_left){
+            document.getElementById('schedule_whats_left').textContent = w_left
+        }, // extract stuff - axios
+        extract_del: function(money, payment, pk){
+            // whats_left_value - form_money
+            var current_whats_left_value = Number(document.getElementById("left").textContent)
+            var left_atual_value = parseFloat(current_whats_left_value - money)
+            document.getElementById("left").textContent = left_atual_value
+            // account_value - form_money
+            var current_account_value = Number(document.getElementById(payment).textContent)
+            var account_atual_value = parseFloat(current_account_value - money)
+            document.getElementById(payment).textContent = account_atual_value
+            document.getElementById(pk).remove()
+        },
+        extract_put: function(accounts, w_left, old_payment, payment){
+
+            if ( old_payment != payment) {
+                document.getElementById(old_payment).textContent = 0;
+                document.getElementById(old_payment+old_payment).remove();
+            }
+
+            $.each(accounts, function(index, value) {
+                if ($("[id='"+index+"").length < 1) {
+                    // creates a new account
+                    var new_account = document.createElement('li');
+
+                    new_account.id = index+index;
+                    new_account.className = 'nav-item nav-link';
+                    var text = index + '<br><span id="' + index +'">' + value['money__sum'] + '</span>'
+                    new_account.innerHTML = text;
+                    var t = document.getElementsByTagName('ul')[1].appendChild(new_account);
+                }
+                document.getElementById(index).textContent = value['money__sum']
+            });
+            document.getElementById("left").textContent = w_left
+        },
+        submitForm: function(event) {
+            var old_payment = event.target.old_payment.value;
+
+            var form = {}
+            form["pk"] = Number(event.target.pk.value)
+            form["category"] = event.target.category.value
+            form["payment"] = event.target.payment.value
+            form["description"] = event.target.description.value
+            form["money"] = Number(event.target.money.value)
+            form["date"] = event.target.date.value
+
+            // vue 2.6.0
+            //event.target.checkbox.checked = false
+            // change button too. After http_verb
+
+            http_verb = event.target.button.innerText
+            http_verb = http_verb == 'delete' ? 'delete' : 'put'
+
+            //axios.defaults.baseURL = 'http://';
+            axios.defaults.xsrfHeaderName = "X-CSRFToken";
+            axios.defaults.xsrfCookieName = "csrftoken";
+
+            var url = this.color == "purple" ? 'schedule_api/' : 'home_api/';
+
+            axios({
+                method: http_verb,
+                url: url + form["pk"] + '/',
+                data: form,
+            }).then(response => {
+                if ( http_verb == 'delete' && response.status == 204) {
+                    if (url == 'schedule_api/') {
+                        this.schedule_del(form["money"], form["pk"])
+                    }
+                    if (url == 'home_api/') {
+                        this.extract_del(form["money"], form["payment"], form["pk"])
+                    }
+                }
+                if ( http_verb == 'put' && response.status == 200) {
+                    if (url == 'schedule_api/') {
+                        this.schedule_put(response.data.whats_left)
+                    }
+                    if (url == 'home_api/') {
+                        var accounts = response.data.accounts
+                        var w_left = response.data.whats_left
+                        this.extract_put(accounts, w_left, old_payment, form["payment"])
+                    }
+                }
+            })
+            .catch(function (err) {
+                console.log(err.message);
+            })
+        }
     },
 });

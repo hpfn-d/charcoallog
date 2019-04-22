@@ -1,5 +1,4 @@
 from django.contrib.auth.models import User
-from django.db.models import QuerySet
 from django.shortcuts import resolve_url as r
 from django.test import TestCase
 
@@ -26,9 +25,17 @@ class HomeContextTest(TestCase):
         show_data = self.response.context['show_data']
         self.assertIsInstance(show_data, ShowData)
 
-    def test_schedule_instance(self):
+    def test_schedule_type(self):
         schedule = self.response.context['schedule']
-        self.assertIsInstance(schedule, QuerySet)
+        self.assertIsInstance(schedule, str)
+
+    def test_extract_type(self):
+        extract = self.response.context['extract']
+        self.assertIsInstance(extract, str)
+
+    def test_summary_type(self):
+        summary = self.response.context['summary']
+        self.assertIsInstance(summary, str)
 
     def test_number_of_href(self):
         self.assertContains(self.response, '<a href', 4)
@@ -43,7 +50,9 @@ class HomeContextTest(TestCase):
             ('type="number"', 1),
             ('step="0.01"', 1),
             ('<button', 3),
-            ('type="submit"', 2)
+            ('type="submit"', 2),
+            ('<summary-tpl', 1),
+            ('<all-reg-forms', 3)
         )
         for text, count in tags:
             with self.subTest():

@@ -111,6 +111,8 @@ class DeleteScheduleApi(TestCase):
 
         Schedule.objects.create(**data)
         data['money'] = '20.00'
+        # self.client = Client(enforce_csrf_checks=True)
+        # self.client.enforce_csrf_checks = True
         self.response = self.client.delete(r('bank:schedule_api', 1))
 
     def test_login(self):

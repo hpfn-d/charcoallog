@@ -3,7 +3,7 @@
 		<li class="nav-item nav-link">
 			 {% if show_data.brief_bank.account_names.items %}
 			what's left<br>
-			<div id="left" :style="styleObject">
+			<div id="left">
 				{{ show_data.brief_bank.whats_left | floatformat:2 }}
 			</div>
 			{% endif %}

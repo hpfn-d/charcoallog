@@ -2,14 +2,13 @@
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-# from django.http import JsonResponse
-from django.shortcuts import Http404, render
+from django.core.serializers import serialize
+from django.shortcuts import render  # Http404
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from charcoallog.bank.brief_bank_service import BriefBank
-# from charcoallog.bank.forms import EditExtractForm
 from charcoallog.bank.models import Extract, Schedule
 from charcoallog.bank.serializers import ExtractSerializer, ScheduleSerializer
 
@@ -18,12 +17,23 @@ from .service import ShowData
 
 @login_required
 def home(request):
-    # user_logged instead of a .filter()
+    show_data = ShowData(request)
+    summary_categories = show_data.summary_categories
+
+    extract_json = serialize("json", show_data.form2.query_default)
+    schedule_json = serialize("json", Schedule.objects.user_logged(request.user).all())
+
     context = {
-        'show_data': ShowData(request),
-        'schedule': Schedule.objects.user_logged(request.user).all(),
+        'show_data': show_data,
+        'schedule': schedule_json,
+        'extract': extract_json,
+        'summary': summary_categories,
     }
     return render(request, "bank/home.html", context)
+
+
+class PkDoesNotExits(Exception):
+    pass
 
 
 class HomeApi(LoginRequiredMixin, APIView):
@@ -33,7 +43,8 @@ class HomeApi(LoginRequiredMixin, APIView):
         try:
             return Extract.objects.get(pk=pk)
         except Extract.DoesNotExist:
-            raise Http404
+            raise PkDoesNotExits('The "pk" {} does not exists Extract db'.format(pk))
+            # raise Http404
 
     # def get(self, request, pk, format=None):
     #     investment = self.get_object(pk)
@@ -57,10 +68,6 @@ class HomeApi(LoginRequiredMixin, APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class DoesNotExits(Exception):
-    pass
-
-
 class ScheduleApi(LoginRequiredMixin, APIView):
     raise_exception = True
 
@@ -68,7 +75,7 @@ class ScheduleApi(LoginRequiredMixin, APIView):
         try:
             return Schedule.objects.get(pk=pk)
         except Schedule.DoesNotExist:
-            raise DoesNotExits('The "pk" {} does not exists in Schedule db'.format(pk))
+            raise PkDoesNotExits('The "pk" {} does not exists in Schedule db'.format(pk))
 
     # def get(self, request, pk, format=None):
 
