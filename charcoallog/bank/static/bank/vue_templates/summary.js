@@ -1,5 +1,5 @@
 Vue.component('summary-tpl', {
-    props: ['k_', 'vl_'],
+    props: ['data'],
     template:`
         <li class="nav-item nav-link text-muted">
            {{ k }}<br>
@@ -10,8 +10,9 @@ Vue.component('summary-tpl', {
     `,
     data: function() {
         return {
-            k: this.k_,
-            vl: this.vl_,
+            //delimiter: ['[[', ']]'],
+            k: this.data.category,
+            vl: this.data.val,
         }
     }
 })

@@ -13,11 +13,16 @@
             <all-reg-forms
                     color=""
                     pk="000"
-                    date=""
-                    money="money"
-                    description="description"
-                    category="category"
-                    payment="payment"
+                    csrf=""
+                    v-bind:data='{
+                        "fields" : {
+                            "date":"",
+                            "money":"money",
+                            "description":"description",
+                            "category":"category",
+                            "payment":"payment"
+                        }
+                    }'
             ></all-reg-forms>
 
             {# start Schedule stuff #}
@@ -33,20 +38,14 @@
             </font>
             {% endif %}
                 <span v-show="display_future">
-                    {% for bills in schedule %}
-                    <form @submit.prevent="submitForm($event)" id="{{ bills.pk }}">
-                        {% csrf_token %}
+                        {# color purple means schedule #}
                         <all-reg-forms
+                                v-for="bills in {{ schedule }}"
                                 color="purple"
-                                pk="{{ bills.pk }}"
-                                date="{{ bills.date|date:'Y-m-d' }}"
-                                money="{{ bills.money }}"
-                                description="{{ bills.description }}"
-                                category="{{ bills.category }}"
-                                payment="{{ bills.payment }}"
+                                csrf='{{ csrf_token }}'
+                                v-bind:data="bills"
+                                v-bind:key="bills.pk"
                         ></all-reg-forms>
-                    </form>
-                    {% endfor %}
                 </span>
         </div>
         {# ends Schedule stuff #}
@@ -56,20 +55,11 @@
             <font size="1px" class="text-muted">
                 month summary by category
                 <ul class="nav nav-pills border">
-                    {% for key, value in show_data.summary_categories.items %}
                     <summary-tpl
-                        k_="{{ key }}"
-                        vl_="{{ value.money__sum | floatformat:2 }}"
+                        v-for="(val, category, index) in {{ summary }}"
+                        v-bind:data='{"category": category, "val": val.money__sum}'
+                        v-bind:key="index"
                     ></summary-tpl>
-
-                    {# <li class="nav-item nav-link text-muted" id="summary1_{{ key }}"> #}
-                    {#     {{ key }}<br> #}
-                    {#     <span id="summary2_{{ key }}"> #}
-                    {#         {{ value.money__sum | floatformat:2 }} #}
-                    {#     </span> #}
-                    {#     </li> #}
-
-                    {% endfor %}
                 </ul>
             </font>
         </div>
@@ -91,22 +81,14 @@
         </div>
 
         <div id="vue_ajax">
-
-                {% for b in show_data.form2.query_default %}
-                <form @submit.prevent="submitForm($event)" id="{{ b.pk }}">
-                {% csrf_token %}
+                {# color "" means extract #}
                 <all-reg-forms
+                        v-for="bills in {{ extract }}"
                         color=""
-                        pk="{{ b.pk }}"
-                        date="{{ b.date|date:'Y-m-d' }}"
-                        money="{{ b.money }}"
-                        description="{{ b.description }}"
-                        category="{{ b.category }}"
-                        payment="{{ b.payment }}"
+                        csrf='{{ csrf_token }}'
+                        v-bind:data="bills"
+                        v-bind:key="bills.pk"
                  ></all-reg-forms>
-                </form>
-                {% endfor %}
-
         </div>
  {% endif %}
 </div>

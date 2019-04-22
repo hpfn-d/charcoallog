@@ -1,5 +1,4 @@
 # from collections import OrderedDict
-from collections import OrderedDict
 from decimal import Decimal
 from unittest.mock import patch
 
@@ -94,7 +93,7 @@ class ServiceLayerTest(TestCase):
         self.assertEqual(self.response.brief_schedule.whats_left(), Decimal('10.00'))
 
     def test_summary_instance(self):
-        self.assertIsInstance(self.response.summary_categories, OrderedDict)
+        self.assertIsInstance(self.response.summary_categories, str)
 
     def test_summary_account_names(self):
         self.assertIn(self.category, self.response.summary_categories)
@@ -104,4 +103,4 @@ class ServiceLayerTest(TestCase):
         user test only has 10
         user other has 100
         """
-        self.assertIn({'money__sum': Decimal('10')}, self.response.summary_categories.values())
+        self.assertIn('{"test": {"money__sum": "10"}', self.response.summary_categories)
