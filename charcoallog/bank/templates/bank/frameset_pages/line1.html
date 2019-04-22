@@ -10,7 +10,7 @@
 		</li>
 
 		{% for key, value in show_data.brief_bank.account_names.items %}
-		<li class="nav-item nav-link text-muted" id="{{ key }}{{ key }}" @click="account_call($event)">
+		<li class="nav-item nav-link" id="{{ key }}{{ key }}" @click="account_call($event)">
 
 			{{ key }}
 			<br>
