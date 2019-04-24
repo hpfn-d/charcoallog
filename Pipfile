@@ -1,0 +1,32 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+django-test-without-migrations = "*"
+flake8 = "*"
+isort = "*"
+coverage = "*"
+tox = "*"
+sqlformatter = "*"
+ipython = "*"
+
+[packages]
+beautifulsoup4 = "*"
+dj-static = "*"
+django = "*"
+django-extensions = "*"
+python-decouple = "*"
+djangorestframework = "*"
+celery = "*"
+django-celery-beat = "*"
+
+[scripts]
+server = "python manage.py runserver"
+all_tests = "python manage.py test"
+coverage_all = "coverage run ./manage.py test"
+coverage_report = "coverage report" 
+
+[requires]
+python_version = "3.7"
