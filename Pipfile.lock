@@ -344,9 +344,10 @@
         },
         "pygments": {
             "hashes": [
-                "sha256:799ed4caf77516e54440806d8d9cd82a7607dfdf4e4fb643815171a4b5c921c0"
+                "sha256:5ffada19f6203563680669ee7f53b64dabbeb100eb51b61996085e99c03b284a",
+                "sha256:e8218dd399a61674745138520d0d4cf2621d7e032439341bc3f647bff125818d"
             ],
-            "version": "==1.6"
+            "version": "==2.3.1"
         },
         "six": {
             "hashes": [
