@@ -24,7 +24,11 @@ class ShowData:
 
 def summary_json(bank_qs):
     current_month = date.today().strftime('%Y-%m-01')
-    query_summary = bank_qs.filter(date__gte=current_month)
+    query_summary = bank_qs.filter(
+        date__gte=current_month).exclude(
+            category__startswith='credit').exclude(
+                category__startswith='transfer')
+
     summary = BriefBank(query_summary)
     return json.dumps(summary.account_names('category'), default=serialize_decimal)
 
