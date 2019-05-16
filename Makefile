@@ -10,5 +10,3 @@ test:
 	pipenv run coverage_all
 	pipenv run coverage_report
 
-report:
-	pipenv run codecov
