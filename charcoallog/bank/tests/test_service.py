@@ -19,11 +19,11 @@ class RQST:
 class ServiceLayerTest(TestCase):
     @patch('charcoallog.bank.service.date')
     def setUp(self, date):
-        user_name = 'teste'
+        self.user_name = 'teste'
         self.category = 'test'
         self.account_name = 'principal'
         data = dict(
-            user_name=user_name,
+            user_name=self.user_name,
             date='2017-12-21',
             money='10.00',
             description='test',
@@ -46,7 +46,7 @@ class ServiceLayerTest(TestCase):
         RQST.method = "GET"
         RQST.GET = search_data
         RQST.POST = dict()
-        RQST.user = user_name
+        RQST.user = self.user_name
         date.today.return_value.strftime.return_value = '2017-12-01'
         self.response = ShowData(RQST)
 
@@ -96,7 +96,9 @@ class ServiceLayerTest(TestCase):
         self.assertIsInstance(self.response.summary_categories, str)
 
     def test_summary_account_names(self):
-        self.assertIn(self.category, self.response.summary_categories)
+        self.assertJSONEqual(
+            self.response.summary_categories, '{"test": {"money__sum": "10"}}'
+        )
 
     def test_summary_account_names_values(self):
         """
@@ -104,3 +106,28 @@ class ServiceLayerTest(TestCase):
         user other has 100
         """
         self.assertIn('{"test": {"money__sum": "10"}', self.response.summary_categories)
+
+    def test_summary_exclude(self):
+        data = dict(
+            user_name=self.user_name,
+            date='2017-12-21',
+            money=10.00,
+            description='test',
+            category='transfer',
+            payment=self.account_name
+        )
+        Extract.objects.create(**data)
+
+        data = dict(
+            user_name=self.user_name,
+            date='2017-12-21',
+            money=10.00,
+            description='test',
+            category='investments',
+            payment=self.account_name
+        )
+        Extract.objects.create(**data)
+
+        qs_summary = Extract.objects.user_logged(self.user_name).summary('2017-12-21')
+        self.assertNotIn('transfer', qs_summary)
+        self.assertNotIn('investments', qs_summary)

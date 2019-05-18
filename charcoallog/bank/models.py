@@ -18,6 +18,17 @@ class ExtractStatementQuerySet(models.QuerySet):
     def total(self):
         return self.aggregate(Sum('money'))
 
+    def summary(self, current_month):
+        return self.filter(date__gte=current_month).exclude(
+            category__startswith='credit').exclude(
+            category__startswith='transfer').exclude(category='investments')
+
+    def pay_or_cat(self, vl):
+        return self.filter(Q(payment=vl) | Q(category=vl))
+
+    # def category(self, vl):
+    #    return self.filter(category=vl)
+
 
 class Extract(models.Model):
     user_name = models.CharField('Name', max_length=30)

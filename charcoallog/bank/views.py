@@ -2,7 +2,6 @@
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.serializers import serialize
 from django.shortcuts import render  # Http404
 from rest_framework import status
 from rest_framework.response import Response
@@ -18,16 +17,12 @@ from .service import ShowData
 @login_required
 def home(request):
     show_data = ShowData(request)
-    summary_categories = show_data.summary_categories
-
-    extract_json = serialize("json", show_data.form2.query_default)
-    schedule_json = serialize("json", Schedule.objects.user_logged(request.user).all())
 
     context = {
         'show_data': show_data,
-        'schedule': schedule_json,
-        'extract': extract_json,
-        'summary': summary_categories,
+        'schedule': show_data.schedule_json,
+        'extract': show_data.extract_json,
+        'summary': show_data.summary_categories,
     }
     return render(request, "bank/home.html", context)
 
