@@ -15,7 +15,7 @@ class BriefBank:
         payment_iterator = set(self.query_user.values_list(col_type))
 
         account = {
-            conta[0]: filter_dict[col_type](self.query_user, conta[0])
+            conta[0]: self.query_user.pay_or_cat(conta[0]).total()
             for conta in payment_iterator
         }
 
@@ -27,15 +27,15 @@ class BriefBank:
         return sum([resto['money__sum'] for resto in self.account_values])
 
 
-def payment(qs, vl):
-    return qs.filter(payment=vl).total()
-
-
-def category(qs, vl):
-    return qs.filter(category=vl).total()
-
-
-filter_dict = dict(
-    payment=payment,
-    category=category
-)
+# def payment(qs, vl):
+#     return qs.filter(payment=vl).total()
+#
+#
+# def category(qs, vl):
+#     return qs.filter(category=vl).total()
+#
+#
+# filter_dict = dict(
+#     payment=payment,
+#     category=category
+# )
