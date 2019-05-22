@@ -27,13 +27,13 @@
 
             {# start Schedule stuff #}
 
-            {% if show_data.brief_schedule.account_names.items %}
+            {% if schedule_data.account_names.items %}
             <font size="1px" color="purple">
                 <span @click="display_future = !display_future">
                 schedule next month:
                 </span>
                 <span id="schedule_whats_left">
-                {{ show_data.brief_schedule.whats_left }}
+                {{ schedule_data.whats_left }}
                 </span>
             </font>
             {% endif %}
