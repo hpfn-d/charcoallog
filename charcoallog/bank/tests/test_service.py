@@ -1,6 +1,5 @@
-# from collections import OrderedDict
+import datetime as dt
 from decimal import Decimal
-from unittest.mock import patch
 
 from django.db.models import QuerySet
 from django.test import TestCase
@@ -9,7 +8,7 @@ from charcoallog.bank.brief_bank_service import BriefBank
 from charcoallog.bank.get_service import MethodGet
 from charcoallog.bank.models import Extract, Schedule
 from charcoallog.bank.post_service import MethodPost
-from charcoallog.bank.service import ShowData
+from charcoallog.bank.service import ScheduleData, ShowData
 
 
 class RQST:
@@ -17,14 +16,21 @@ class RQST:
 
 
 class ServiceLayerTest(TestCase):
-    @patch('charcoallog.bank.service.date')
-    def setUp(self, date):
+    def setUp(self):
+        now = dt.datetime.today()
+        start = now + dt.timedelta(days=-1)
+        ends = now + dt.timedelta(days=1)
+
+        now_str = now.strftime("%Y-%m-%d")
+        ends_str = ends + dt.timedelta(days=1)
+        start_str = start + dt.timedelta(days=-1)
+
         self.user_name = 'teste'
         self.category = 'test'
         self.account_name = 'principal'
         data = dict(
             user_name=self.user_name,
-            date='2017-12-21',
+            date=now_str,
             money='10.00',
             description='test',
             category=self.category,
@@ -32,7 +38,7 @@ class ServiceLayerTest(TestCase):
         )
         others_data = dict(
             user_name='other',
-            date='2017-12-21',
+            date=now_str,
             money='100.00',
             description='test',
             category=self.category,
@@ -42,13 +48,13 @@ class ServiceLayerTest(TestCase):
 
         Extract.objects.create(**data)
         Extract.objects.create(**others_data)
-        search_data = dict(column='all', from_date='2017-12-01', to_date='2017-12-31')
+        search_data = dict(column='all', from_date=start_str, to_date=ends_str)
         RQST.method = "GET"
         RQST.GET = search_data
         RQST.POST = dict()
         RQST.user = self.user_name
-        date.today.return_value.strftime.return_value = '2017-12-01'
         self.response = ShowData(RQST)
+        self.schdl = ScheduleData(self.user_name)
 
     def test_query_user_instance(self):
         self.assertIsInstance(self.response.query_bank, QuerySet)
@@ -75,13 +81,13 @@ class ServiceLayerTest(TestCase):
         self.assertEqual(self.response.brief_bank.whats_left(), Decimal('10.00'))
 
     def test_query_schedule_instance(self):
-        self.assertIsInstance(self.response.query_schedule, QuerySet)
+        self.assertIsInstance(self.schdl.query_schedule, QuerySet)
 
     def test_brief_schedule_instance(self):
-        self.assertIsInstance(self.response.brief_schedule, BriefBank)
+        self.assertIsInstance(self.schdl.brief_schedule, BriefBank)
 
     def test_brief_schedule_account_names(self):
-        self.assertIn(self.account_name, self.response.brief_schedule.account_names())
+        self.assertIn(self.account_name, self.schdl.brief_schedule.account_names())
 
     def test_brief_schedule_whats_left(self):
         """
@@ -89,8 +95,9 @@ class ServiceLayerTest(TestCase):
             bank.account_names must be called before whats_left
             (account_values)
         """
-        self.response.brief_schedule.account_names()
-        self.assertEqual(self.response.brief_schedule.whats_left(), Decimal('10.00'))
+        content = self.schdl.brief_schedule.account_names()
+        self.assertIn('principal', content)
+        self.assertEqual({'money__sum': Decimal('10')}, content['principal'])
 
     def test_summary_instance(self):
         self.assertIsInstance(self.response.summary_categories, str)

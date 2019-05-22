@@ -1,5 +1,5 @@
 import json
-from _decimal import Decimal
+from decimal import Decimal
 
 from django.core.serializers import serialize
 from django.utils.datetime_safe import date
@@ -14,24 +14,38 @@ class ShowData:
     def __init__(self, request):
         self.query_bank = Extract.objects.user_logged(request.user)
         self.form1 = MethodPost(request, self.query_bank)
-
         self.form2 = MethodGet(request, self.query_bank)
-        self.extract_json = serialize("json", self.form2.query_default)
-
         self.brief_bank = BriefBank(self.query_bank)
-
-        self.query_schedule = Schedule.objects.user_logged(request.user)
-        self.schedule_json = serialize("json", self.query_schedule.all())
-
-        self.brief_schedule = BriefBank(self.query_schedule)
-        self.summary_categories = summary_json(self.query_bank)
+        self.summary_categories = Summary(self.query_bank).summary_categories
 
 
-def summary_json(bank_qs):
+class ScheduleData:
+    def __init__(self, request_user):
+        self.query_schedule = Schedule.objects.user_logged(request_user)
+
+    @property
+    def brief_schedule(self):
+        return BriefBank(self.query_schedule)
+
+    @property
+    def schedule_json(self):
+        return serialize("json", self.query_schedule.all())
+
+
+class Summary:
     current_month = date.today().strftime('%Y-%m-01')
-    query_summary = bank_qs.summary(current_month)
-    summary = BriefBank(query_summary)
-    return json.dumps(summary.account_names('category'), default=serialize_decimal)
+
+    def __init__(self, qs):
+        self.month_summary = qs.summary(self.current_month)
+
+    @property
+    def summary_categories(self):
+        summary = self.categories()
+        return json.dumps(summary, default=serialize_decimal)
+
+    def categories(self):
+        summary = BriefBank(self.month_summary)
+        return summary.account_names('category')
 
 
 def serialize_decimal(obj):

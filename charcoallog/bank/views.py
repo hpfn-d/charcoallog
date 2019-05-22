@@ -11,17 +11,19 @@ from charcoallog.bank.brief_bank_service import BriefBank
 from charcoallog.bank.models import Extract, Schedule
 from charcoallog.bank.serializers import ExtractSerializer, ScheduleSerializer
 
-from .service import ShowData
+from .service import ScheduleData, ShowData
 
 
 @login_required
 def home(request):
     show_data = ShowData(request)
+    schedule_data = ScheduleData(request.user)
 
     context = {
         'show_data': show_data,
-        'schedule': show_data.schedule_json,
-        'extract': show_data.extract_json,
+        'schedule_data': schedule_data.brief_schedule,
+        'schedule': schedule_data.schedule_json,
+        'extract': show_data.form2.extract_json,
         'summary': show_data.summary_categories,
     }
     return render(request, "bank/home.html", context)

@@ -1,30 +1,38 @@
 from datetime import date
 
 from django.contrib import messages
+from django.core.serializers import serialize
 
 from charcoallog.bank.forms import SelectExtractForm
 
 
 class MethodGet:
+    month_01 = date.today().strftime('%Y-%m-01')
+
     def __init__(self, request, query_user):
         """
         :param request: request from views
-        :param query_user: Extract objects from ..models.py
+        :param query_user: Extract objects from .models.py
         """
         self.request = request
-        # self.request_get = request.GET
-        month_01 = date.today().strftime('%Y-%m-01')
         self.query_user = query_user
-        self.query_default = self.query_user.filter(date__gte=month_01)
-        self.query_default_total = self.query_default.total()
-        self.selectextractform = SelectExtractForm
-        self.get_form = None
+        self.extract_json = ''
+        self.query_default = ''
+        self.query_default_total = ''
+        self.get_form = SelectExtractForm(self.request.GET)
 
-        if request.method == "GET":
-            self.method_get()
+        self.build_request()
+
+    def build_request(self):
+        if self.request.method == 'GET' and self.get_form.is_valid():
+            self.search_from_get(self.get_form)
+        else:
+            self.query_default = self.query_user.filter(date__gte=self.month_01)
+            self.query_default_total = self.query_default.total()
+            self.extract_json = serialize("json", self.query_default)
 
     def method_get(self):
-        self.get_form = self.selectextractform(self.request.GET)
+        self.get_form = SelectExtractForm(self.request.GET)
 
         if self.get_form.is_valid():
             self.search_from_get(self.get_form)
@@ -40,10 +48,9 @@ class MethodGet:
             bills = self.query_user.date_range(from_date, to_date).which_field(column)
 
         if bills.exists():
-            # print('bills exists')
             self.query_default = bills
+            self.extract_json = serialize("json", self.query_default)
         else:
-            # self.query_default = None
             messages.error(
                 self.request,
                 "' %s ' - Invalid search or nothing for these dates." % column
