@@ -99,5 +99,5 @@ class ScheduleApi(LoginRequiredMixin, APIView):
 
 def build_json_data(query_user):
     line1 = BriefBank(query_user)
-    return {"accounts": line1.account_names(),
+    return {"accounts": line1.account_val_sorted(),
             "whats_left": line1.whats_left()}

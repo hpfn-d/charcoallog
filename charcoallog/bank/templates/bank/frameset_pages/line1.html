@@ -1,7 +1,7 @@
 <div class="col-md-12" id="line1_accounts">
 	<ul class="nav nav-pills border">
 		<li class="nav-item nav-link">
-			 {% if show_data.brief_bank.account_names.items %}
+			 {% if show_data.brief_bank.account_dict.items %}
 			what's left<br>
 			<div id="left">
 				{{ show_data.brief_bank.whats_left | floatformat:2 }}
@@ -9,7 +9,7 @@
 			{% endif %}
 		</li>
 
-		{% for key, value in show_data.brief_bank.account_names.items %}
+		{% for key, value in show_data.brief_bank.account_val_sorted.items %}
 		<li class="nav-item nav-link" id="{{ key }}{{ key }}" @click="account_call($event)">
 
 			{{ key }}

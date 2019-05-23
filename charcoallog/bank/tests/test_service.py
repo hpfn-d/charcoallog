@@ -69,15 +69,12 @@ class ServiceLayerTest(TestCase):
         self.assertIsInstance(self.response.brief_bank, BriefBank)
 
     def test_brief_bank_account_names(self):
-        self.assertIn(self.account_name, self.response.brief_bank.account_names())
+        self.assertIn(self.account_name, self.response.brief_bank.account_val_sorted())
 
     def test_brief_bank_whats_left(self):
         """
             whats_left attribute must be 10 for user teste
-            bank.account_names must be called before whats_left
-            (account_values)
         """
-        self.response.brief_bank.account_names()
         self.assertEqual(self.response.brief_bank.whats_left(), Decimal('10.00'))
 
     def test_query_schedule_instance(self):
@@ -87,17 +84,16 @@ class ServiceLayerTest(TestCase):
         self.assertIsInstance(self.schdl.brief_schedule, BriefBank)
 
     def test_brief_schedule_account_names(self):
-        self.assertIn(self.account_name, self.schdl.brief_schedule.account_names())
+        self.assertIn(self.account_name, self.schdl.brief_schedule.account_val_sorted())
 
     def test_brief_schedule_whats_left(self):
         """
             whats_left attribute must be 10 for user teste
-            bank.account_names must be called before whats_left
-            (account_values)
         """
-        content = self.schdl.brief_schedule.account_names()
+        content = self.schdl.brief_schedule.account_val_sorted()
         self.assertIn('principal', content)
-        self.assertEqual({'money__sum': Decimal('10')}, content['principal'])
+        content = self.schdl.brief_schedule.whats_left()
+        self.assertEqual(Decimal('10'), content)
 
     def test_summary_instance(self):
         self.assertIsInstance(self.response.summary_categories, str)

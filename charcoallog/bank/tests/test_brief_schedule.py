@@ -25,8 +25,7 @@ class BriefScheduleTest(TestCase):
         Schedule.objects.create(**data)
         query_user = Schedule.objects.user_logged(user_name)
         self.response = BriefBank(query_user)
-        # must execute account_names() to produce values for whats_left
-        self.brief_schedule_account_name = self.response.account_names()
+        self.brief_schedule_account_name = self.response.account_val_sorted()
 
     def test_schedule_names(self):
         self.assertIn(self.account_name, self.brief_schedule_account_name)
