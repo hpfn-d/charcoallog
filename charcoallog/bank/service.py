@@ -44,8 +44,8 @@ class Summary:
         return json.dumps(summary, default=serialize_decimal)
 
     def categories(self):
-        summary = BriefBank(self.month_summary)
-        return summary.account_names('category')
+        summary = BriefBank(self.month_summary, 'category')
+        return summary.account_val_sorted()
 
 
 def serialize_decimal(obj):

@@ -22,7 +22,7 @@ class BriefBankTest(TestCase):
         Extract.objects.create(**data)
         query_user = Extract.objects.user_logged(user_name)
         self.response = BriefBank(query_user)
-        self.brief_bank_account_name = self.response.account_names()
+        self.brief_bank_account_name = self.response.account_val_sorted()
 
     def test_line1_account_names(self):
         self.assertIn(self.account_name, self.brief_bank_account_name)
