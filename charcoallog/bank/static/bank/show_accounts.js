@@ -4,6 +4,7 @@ var summary = new Vue({
     el: '#month_summary_category',
     data: {
         out: '',
+        display_future: false
     }
 });
 
@@ -29,6 +30,7 @@ var brief = new Vue({
                 delete this.out[event.target.id]
 
             } else {
+                // color purple means not in
                 document.getElementById("left").textContent = parseFloat(this.whats_left - num_)
                 document.getElementById(key_).style.color = 'purple'
                 this.out[event.target.id] = 'inative'

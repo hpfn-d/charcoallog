@@ -6,10 +6,53 @@
 	 	{% endfor %}
 	    </ul>
 	{% else %}
-        <br />
 
+
+         {# summary does not update yet #}
+        <div id="month_summary_category">
+            <font size="1px" class="text-muted">
+                <span @click="display_future = !display_future">
+                    month summary by category
+                </span>
+                <span v-show="display_future">
+                    <ul class="nav nav-pills border">
+                        <summary-tpl
+                            v-for="(val, category, index) in {{ summary }}"
+                            v-bind:data='{"category": category, "val": val.money__sum}'
+                            v-bind:key="index"
+                        ></summary-tpl>
+                    </ul>
+                </span>
+            </font>
+        </div>
+
+        {# starts Schedule stuff #}
         <div id="vue_schedule_ajax">
-            {# header #}
+            {% if schedule_data.whats_left %}
+            <font size="1px" color="purple">
+                <span @click="display_future = !display_future">
+                schedule next month:
+                </span>
+                <span id="schedule_whats_left">
+                {{ schedule_data.whats_left }}
+                </span>
+            </font>
+            {% endif %}
+                <span v-show="display_future">
+                        {# color purple means not in #}
+                        <all-reg-forms
+                                v-for="bills in {{ schedule }}"
+                                color="purple"
+                                csrf='{{ csrf_token }}'
+                                v-bind:data="bills"
+                                v-bind:key="bills.pk"
+                        ></all-reg-forms>
+                </span>
+
+        {# ends Schedule stuff #}
+         <br />
+            
+        {# starts header #}
             <all-reg-forms
                     color=""
                     pk="000"
@@ -24,47 +67,8 @@
                         }
                     }'
             ></all-reg-forms>
-
-            {# start Schedule stuff #}
-
-            {% if schedule_data.whats_left %}
-            <font size="1px" color="purple">
-                <span @click="display_future = !display_future">
-                schedule next month:
-                </span>
-                <span id="schedule_whats_left">
-                {{ schedule_data.whats_left }}
-                </span>
-            </font>
-            {% endif %}
-                <span v-show="display_future">
-                        {# color purple means schedule #}
-                        <all-reg-forms
-                                v-for="bills in {{ schedule }}"
-                                color="purple"
-                                csrf='{{ csrf_token }}'
-                                v-bind:data="bills"
-                                v-bind:key="bills.pk"
-                        ></all-reg-forms>
-                </span>
+        {# ends header #}
         </div>
-        {# ends Schedule stuff #}
-
-        {# summary does not update yet #}
-        <div id="month_summary_category">
-            <font size="1px" class="text-muted">
-                month summary by category
-                <ul class="nav nav-pills border">
-                    <summary-tpl
-                        v-for="(val, category, index) in {{ summary }}"
-                        v-bind:data='{"category": category, "val": val.money__sum}'
-                        v-bind:key="index"
-                    ></summary-tpl>
-                </ul>
-            </font>
-        </div>
-
-
 
         <div id="total">
         <font size="1px">
