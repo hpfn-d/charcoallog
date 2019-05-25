@@ -12,6 +12,54 @@ class RQST:
 
 
 class ValidPostMethodNoDetails(TestCase):
+    """ Invest NoDetails (class) MethodPost test """
+
+    def setUp(self):
+        self.data = dict(
+            user_name='you',
+            date='2018-03-27',
+            money=94.42,
+            kind='Títulos Públicos',
+            tx_op=00.00,
+            brokerage='Ativa'
+        )
+
+        RQST.method = 'POST'
+        RQST.POST = self.data
+        RQST.user = 'you'
+        self.response = MethodPost(RQST)
+
+    def test_investmentform_instance(self):
+        """
+            investmentform attr must be a InvestmentForm instance.
+        """
+        self.assertIsInstance(self.response.i_form, InvestmentForm)
+        self.assertIsInstance(self.response.d_form, InvestmentDetailsForm)
+
+    def test_form_is_valid(self):
+        self.assertFalse(self.response.d_form.is_valid())
+        self.assertTrue(self.response.i_form.is_valid())
+
+    def test_invest_form_save(self):
+        select_data = NewInvestment.objects.get(pk=1)
+        select_dict = dict(
+            user_name=select_data.user_name,
+            date=select_data.date.strftime('%Y-%m-%d'),
+            tx_op=float(select_data.tx_op),
+            money=float(select_data.money),
+            kind=select_data.kind,
+            brokerage=select_data.brokerage
+        )
+
+        self.assertDictEqual(self.data, select_dict)
+
+    def test_send_invest_post_url(self):
+        self.assertEqual(1, NewInvestment.objects.filter().count())
+
+
+class NoDetailsByPost(TestCase):
+    """ Test Invest NoDetails by POST verb"""
+
     def setUp(self):
         self.user = 'teste'
         user = User.objects.create(username=self.user)
@@ -28,45 +76,17 @@ class ValidPostMethodNoDetails(TestCase):
             tx_op=00.00,
             brokerage='Ativa'
         )
-
-        RQST.method = 'POST'
-        RQST.POST = self.data
-        RQST.user = self.user
-        self.response = MethodPost(RQST)
+        self.response = self.client.post(r('investments:home'), self.data)
 
     def test_login(self):
         self.assertTrue(self.login_in)
 
-    def test_investmentform_instance(self):
+    def test_count_records(self):
         """
-            investmentform attr must be a InvestmentForm instance.
+        Test if record is in (Invest) db and also check if it is
+        saved by request.user
         """
-        self.assertIsInstance(self.response.i_form, InvestmentForm)
-        self.assertIsInstance(self.response.d_form, InvestmentDetailsForm)
-
-    def test_form_is_valid(self):
-        self.assertFalse(self.response.d_form.is_valid())
-        self.assertTrue(self.response.i_form.is_valid())
-
-    def test_invest_form_save(self):
-        query_user = NewInvestment.objects.user_logged(self.user)
-        select_data = query_user.get(pk=1)
-        select_dict = dict(
-            user_name=select_data.user_name,
-            date=select_data.date.strftime('%Y-%m-%d'),
-            tx_op=float(select_data.tx_op),
-            money=float(select_data.money),
-            kind=select_data.kind,
-            brokerage=select_data.brokerage
-        )
-        self.data['user_name'] = self.user
-        self.assertDictEqual(self.data, select_dict)
-
-    def test_send_invest_post_url(self):
-        self.data['kind'] = 'HERE'
-        response = self.client.post(r('investments:home'), self.data)  # noqa
-        self.assertEqual('HERE', NewInvestment.objects.get(pk=2).kind)
-        self.assertEqual(2, NewInvestment.objects.filter().count())
+        self.assertEqual(1, NewInvestment.objects.user_logged(self.user).count())
 
 
 class ValidPostMethodWithDetails(TestCase):
@@ -138,5 +158,9 @@ class DetailsByPost:
     def test_form_instance(self):
         self.assertTrue(isinstance(self.response.context['d_form'], InvestmentDetailsForm))
 
-    def test_count_records(self):
-        self.assertEqual(1, NewInvestmentDetails.objects.count())
+    def test_detailscount_records(self):
+        """
+        Test if record (Details) is in db and also check if it is
+        saved by request.user
+        """
+        self.assertEqual(1, NewInvestmentDetails.objects.user_logged(self.user).count())
