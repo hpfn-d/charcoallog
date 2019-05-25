@@ -14,6 +14,3 @@ class ShowData:
             self.newinvestment,
             self.newinvestmentdetails
         )
-        # self.brief_invest_total = self.brief_investment.brokerage_or_invest_type()
-        # self.account_names = self.line1.account_names()
-        # self.whats_left = self.line1.whats_left()

@@ -6,12 +6,6 @@ class BriefInvestment:
         self._query_user_invest = query_user_invest
         self._query_user_investdetail = query_user_investdetail
 
-    # def brokerage_or_invest_type(self):
-    #     brk_knd = self._brokerage()
-    #     brk_knd.update(self._kind_investment())
-    #
-    #     return OrderedDict(sorted(brk_knd.items()))
-
     def brokerage(self):
         names_iterator = set(self._query_user_invest.brokerage())
 

@@ -6,13 +6,6 @@ from charcoallog.investments.models import NewInvestment, NewInvestmentDetails
 class InvestmentForm(forms.ModelForm):
     """ Pode passar o argumento 'label'"""
 
-    # date = forms.DateField()
-    # money = forms.DecimalField()
-    # kind = forms.CharField()
-    # which_target = forms.CharField()
-    # tx_op = forms.DecimalField()
-    # brokerage = forms.CharField()
-
     class Meta:
         model = NewInvestment
         fields = ['date', 'money', 'kind', 'tx_op', 'brokerage']

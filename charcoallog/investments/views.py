@@ -10,7 +10,6 @@ from charcoallog.investments.forms import (
     InvestmentDetailsForm, InvestmentSearchForm
 )
 from charcoallog.investments.models import NewInvestment, NewInvestmentDetails
-# from charcoallog.investments.serializers import InvestmentSerializer
 from charcoallog.investments.serializers import (
     InvestmentDetailsSerializer, InvestmentSerializer
 )
@@ -20,7 +19,6 @@ from charcoallog.investments.service import ShowData
 @login_required
 def home(request):
     context = {
-        # 'form': InvestmentForm,
         'd_form': InvestmentDetailsForm(),
         'form2': InvestmentSearchForm(),
         'show_data': ShowData(request)}
