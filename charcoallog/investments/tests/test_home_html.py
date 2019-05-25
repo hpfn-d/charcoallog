@@ -58,8 +58,9 @@ class InvestmentHomeOkTest(TestCase):
         """ Context must have Investment form """
         # form = self.response.context['form']
         # self.assertIsInstance(form(), InvestmentForm)
-        formd = self.response.context['formd']
-        self.assertIsInstance(formd, InvestmentDetailsForm)
+        d_form = self.response.context['d_form']
+        self.assertIsInstance(d_form, InvestmentDetailsForm)
+        # self.assertFalse(self.response.context['i_form'])
 
     def test_show_data(self):
         data = self.response.context['show_data']
