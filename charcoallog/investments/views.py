@@ -21,7 +21,7 @@ from charcoallog.investments.service import ShowData
 def home(request):
     context = {
         # 'form': InvestmentForm,
-        'formd': InvestmentDetailsForm(),
+        'd_form': InvestmentDetailsForm(),
         'form2': InvestmentSearchForm(),
         'show_data': ShowData(request)}
     return render(request, 'investments/home.html', context)
