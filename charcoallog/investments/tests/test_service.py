@@ -15,6 +15,7 @@ class ServiceTest(TestCase):
     def setUp(self):
         RQST.method = None
         RQST.POST = {}
+        RQST.GET = {}
         RQST.user = 'teste'
         self.service = ShowData(RQST)
 

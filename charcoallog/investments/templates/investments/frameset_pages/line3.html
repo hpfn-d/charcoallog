@@ -6,19 +6,17 @@
 	 	{% endfor %}
 	    </ul>
 	{% else %}
-        {% for b in show_data.methodget.query_default %}
-        <form @submit.prevent="submitForm($event)" id="{{ b.pk }}">
-        {% csrf_token %}
+        {# {% for b in show_data.methodget.query_default %} #}
+        {# <form @submit.prevent="submitForm($event)" id="{{ b.pk }}"> #}
+        {# {% csrf_token %} #}
+
         <all-reg-forms
-                pk="{{ b.pk }}"
-                date="{{ b.date|date:'Y-m-d' }}"
-                money="{{ b.money }}"
-                kind="{{ b.kind }}"
-                {# which_target="{{ b.which_target }}" #}
-                tx_op="{{ b.tx_op }}"
-                brokerage="{{ b.brokerage }}"
-         ></all-reg-forms>
-        </form>
-        {% endfor %}
+                v-for="invest in {{ extract }}"
+                csrf='{{ csrf_token }}'
+                v-bind:data="invest"
+                v-bind:key="invest.pk"
+        ></all-reg-forms>
+        {# </form> #}
+        {# {% endfor %} #}
     {% endif %}
 </div>

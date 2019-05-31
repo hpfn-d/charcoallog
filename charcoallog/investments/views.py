@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import Http404, render
@@ -18,21 +20,26 @@ from charcoallog.investments.service import ShowData
 
 @login_required
 def home(request):
+    show_data = ShowData(request)
+
     context = {
         'd_form': InvestmentDetailsForm(),
         'form2': InvestmentSearchForm(),
-        'show_data': ShowData(request)}
+        'show_data': show_data,
+        'extract': show_data.methodget.extract_json,
+    }
+
     return render(request, 'investments/home.html', context)
 
 
+# @api_view
 @login_required
 def newinvestmetdetails_detail(request, kind):
     # post = DetailPost(request)  # noqa F841
-
-    qs_kind_details = NewInvestmentDetails.objects.user_logged(request.user).kind(kind)
+    kind_qs = inheritance_serializer(request.user, kind)
 
     context = {
-        'newinvestmentdetails': qs_kind_details,
+        'newinvestmentdetails': json.dumps(kind_qs),
         # 'form': InvestmentDetailsForm()
     }
     return render(request, 'investments/details/newinvestmentdetails_detail.html', context)
@@ -93,3 +100,51 @@ class DetailApi(LoginRequiredMixin, APIView):
         investment_d = self.get_object(pk)
         investment_d.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+# HELPER
+def inheritance_serializer(request_user, kind):
+    qs_kind_details = NewInvestmentDetails.objects.user_logged(request_user).kind(kind)
+    # all_model = list()
+    all_model = [
+        {
+            'pk': i.pk,
+            'fields': {
+                'date': i.date.strftime("%Y-%m-%d"),
+                'money': str(i.money),
+                'kind': i.kind,
+                'which_target': i.which_target,
+                'segment': i.segment,
+                'tx_or_price': str(i.tx_or_price),
+                'quant': str(i.quant)}
+        }
+        for i in qs_kind_details]
+
+    return all_model
+
+# qs_kind_details = NewInvestmentDetails.objects.user_logged(request.user).kind(kind)
+# [
+#     {
+#         "pk": "4b678b301dfd8a4e0dad910de3ae245b",
+#         "model": "sessions.session",
+#         "fields": {
+#             "expire_date": "2013-01-16T08:16:59.844Z",
+#             ...
+#         }
+#     }
+# ]
+
+# all_kind_dict = list()
+# for i in qs_kind_details:
+#     d = {
+#         'pk': i.pk,
+#         'fields': {
+#             'date': i.date.strftime("%Y-%m-%d"),
+#             'money': str(i.money),
+#             'kind': i.kind,
+#             'which_target': i.which_target,
+#             'segment': i.segment,
+#             'tx_or_price': str(i.tx_or_price),
+#             'quant': str(i.quant)}
+#     }
+#     all_kind_dict.append(d)

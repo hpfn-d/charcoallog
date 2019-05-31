@@ -33,7 +33,12 @@
 
 {% block head_javascript %}
 <script src="https://unpkg.com/vue@2.5.17/dist/vue.js"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+{# <script src="https://unpkg.com/axios/dist/axios.min.js"></script> #}
+
+<script src="{% static 'axios.min.js' %}"></script>
+{# <script src="{% static 'vue_dev_2.6.10.js' %}"></script> #}
+
+
 <script src="{% static 'investments/vue_templates/line3_template.js' %}"></script>
 <script src="{% static 'investments/home_ajax_vue.js' %}"></script>
 <script src="{% static 'investments/invest_form1_vue.js' %}"></script>

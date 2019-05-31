@@ -24,7 +24,7 @@ class InvalidGetMethod(TestCase):
         RQST.method = "POST"
         RQST.GET = data
         response = MethodGet(RQST, query_user)
-        self.assertEqual(response.get_form, None)
+        self.assertIsInstance(response.get_form, InvestmentSearchForm)
 
 
 class ValidGetMethod(TestCase):
