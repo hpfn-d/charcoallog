@@ -1,13 +1,11 @@
+import json
 from decimal import Decimal
 
 from django.contrib.auth.models import User
-from django.db.models import QuerySet
 from django.shortcuts import resolve_url as r
 from django.test import TestCase
 
-from charcoallog.investments.models import (
-    InvestmentStatementQuerySet, NewInvestmentDetails
-)
+from charcoallog.investments.models import NewInvestmentDetails
 
 
 class InvestmentDetailTest(TestCase):
@@ -18,7 +16,7 @@ class InvestmentDetailTest(TestCase):
         user.save()
 
         self.date = '2018-03-27'
-        self.money = 94.42
+        self.money = '94.42'
         self.kind = 'Títulos Públicos'
         # self.which_target = 'Tesouro Direto'
 
@@ -26,8 +24,8 @@ class InvestmentDetailTest(TestCase):
 
         self.which_target = 'Tesouro Direto'
         self.segment = 'Selic'
-        self.tx_or_price = 0.01
-        self.quant = 1.00
+        self.tx_or_price = '0.01'
+        self.quant = '1.00'
 
         self.data = dict(
             user_name=user_n,
@@ -57,7 +55,7 @@ class InvestmentDetailTest(TestCase):
     def test_instances(self):
         expected = [
             # (self.resp.context['form'], InvestmentDetailsForm),
-            (self.resp.context['newinvestmentdetails'], InvestmentStatementQuerySet)
+            (self.resp.context['newinvestmentdetails'], str)
         ]
 
         for e, cls in expected:
@@ -70,15 +68,15 @@ class InvestmentDetailTest(TestCase):
         vue template does not count
         """
         expected = [
-            ('<form', 2),
-            ('<input', 4),
+            ('<form', 1),
+            ('<input', 3),  # search form
             # ("type='hidden'", 1),
             ('type="text"', 1),
             # ('type="number"', 2),
             # ('step="0.01"', 1),
             ('type="date"', 2),
             ('type="submit"', 1),
-            ('</form>', 2),
+            ('</form>', 1),
             ('class="row"', 4),
             ('method="get"', 1),
             # ('method="post"', 1),
@@ -88,26 +86,26 @@ class InvestmentDetailTest(TestCase):
             with self.subTest():
                 self.assertContains(self.resp, tag, x)
 
-    def test_csrf(self):
-        """ html must contain csrf """
-        self.assertContains(self.resp, 'csrfmiddlewaretoken', 1)
+    # inside vue template
+    # def test_csrf(self):
+    #    """ html must contain csrf """
+    #    self.assertContains(self.resp, 'csrfmiddlewaretoken', 1)
 
-    def test_context_instance(self):
-        form3 = self.resp.context['newinvestmentdetails']
-        self.assertIsInstance(form3, QuerySet)
+    # test above
+    # def test_context_instance(self):
+    #    form3 = self.resp.context['newinvestmentdetails']
+    #    self.assertIsInstance(form3, QuerySet)
 
     def test_context(self):
         data = self.resp.context['newinvestmentdetails']
+        data = json.loads(data)
+        # del data['pk']
+
         expected = [
-            (str(data[0].date), self.date),
-            (data[0].money, Decimal(str(self.money))),
-            (data[0].kind, self.kind),
-            (data[0].which_target, self.which_target),
-            (data[0].segment, self.segment),
-            (data[0].tx_or_price, Decimal(str(self.tx_or_price))),
-            (data[0].quant, self.quant)
+            self.date, str(Decimal(self.money)), self.kind, self.which_target,
+            self.segment, str(Decimal(self.tx_or_price)), self.quant
         ]
 
-        for know, e in expected:
+        for v in data[0]['fields'].values():
             with self.subTest():
-                self.assertEqual(know, e)
+                self.assertIn(v, expected)

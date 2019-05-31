@@ -14,3 +14,9 @@ class ShowData:
             self.newinvestment,
             self.newinvestmentdetails
         )
+
+# class ShowDetailsData:
+#     def __init__(self, request):
+#         self.newinvestmentdetails = NewInvestmentDetails.objects.user_logged(request.user)
+#         self.methodget_details = MethodGet(request, self.newinvestmentdetails)
+#         qs_kind_details = NewInvestmentDetails.objects.user_logged(request.user).kind(kind)
