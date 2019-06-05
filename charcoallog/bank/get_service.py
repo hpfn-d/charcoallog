@@ -25,7 +25,7 @@ class MethodGet:
 
     def build_request(self):
         if self.request.method == 'GET' and self.get_form.is_valid():
-            self.search_from_get(self.get_form)
+            self.search_from_get()
         else:
             self.query_default = self.query_user.filter(date__gte=self.month_01)
             self.query_default_total = self.query_default.total()
@@ -35,12 +35,12 @@ class MethodGet:
         self.get_form = SelectExtractForm(self.request.GET)
 
         if self.get_form.is_valid():
-            self.search_from_get(self.get_form)
+            self.search_from_get()
 
-    def search_from_get(self, form):
-        column = form.cleaned_data.get('column')
-        from_date = form.cleaned_data.get('from_date')
-        to_date = form.cleaned_data.get('to_date')
+    def search_from_get(self):
+        column = self.get_form.cleaned_data.get('column')
+        from_date = self.get_form.cleaned_data.get('from_date')
+        to_date = self.get_form.cleaned_data.get('to_date')
 
         if column.lower() == 'all':
             bills = self.query_user.date_range(from_date, to_date)
