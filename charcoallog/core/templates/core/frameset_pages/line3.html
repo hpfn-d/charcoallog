@@ -5,7 +5,7 @@
         <ul class="nav nav-pills border">
             <summary-tpl
                     v-for="(val, category, index) in {{ s }}"
-                    v-bind:data='{"category": category, "val": val.money__sum|floatformat}'
+                    v-bind:data='{"category": category, "val": val.money__sum}'
                     v-bind:key="index"
             ></summary-tpl>
         </ul>
