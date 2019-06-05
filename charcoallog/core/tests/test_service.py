@@ -20,7 +20,7 @@ class BuildHomeTest(TestCase):
             hasattr(service, 'Extract'),
             hasattr(service, 'BriefBank'),
             hasattr(service, 'Scrap'),
-            hasattr(self.obj, 'query_user'),
+            hasattr(self.obj, 'query_bank'),
             hasattr(self.obj, 'line1'),
             hasattr(self.obj, 'selic_info'),
             hasattr(self.obj, 'ibov_info'),
@@ -36,7 +36,7 @@ class BuildHomeTest(TestCase):
 
     def test_instance(self):
         expected = [
-            (isinstance(self.obj.query_user, QuerySet)),
+            (isinstance(self.obj.query_bank, QuerySet)),
             (isinstance(self.obj.line1, BriefBank)),
             # (isinstance(self.obj.selic_info, list)),
             # (isinstance(self.obj.ibov_info, list)),

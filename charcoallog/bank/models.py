@@ -18,8 +18,8 @@ class ExtractStatementQuerySet(models.QuerySet):
     def total(self):
         return self.aggregate(Sum('money'))
 
-    def summary(self, current_month):
-        return self.filter(date__gte=current_month).exclude(
+    def summary(self, year, month):
+        return self.filter(date__year=year, date__month=month).exclude(
             category__startswith='credit').exclude(
             category__startswith='transfer').exclude(category='investments')
 

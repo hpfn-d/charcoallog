@@ -131,6 +131,6 @@ class ServiceLayerTest(TestCase):
         )
         Extract.objects.create(**data)
 
-        qs_summary = Extract.objects.user_logged(self.user_name).summary('2017-12-21')
+        qs_summary = Extract.objects.user_logged(self.user_name).summary('2017', '12')
         self.assertNotIn('transfer', qs_summary)
         self.assertNotIn('investments', qs_summary)

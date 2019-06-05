@@ -33,10 +33,12 @@ class ScheduleData:
 
 
 class Summary:
-    current_month = date.today().strftime('%Y-%m-01')
+    current = date.today()
+    year = current.strftime('%Y')
+    month = current.strftime('%m')
 
     def __init__(self, qs):
-        self.month_summary = qs.summary(self.current_month)
+        self.month_summary = qs.summary(self.year, self.month)
 
     @property
     def summary_categories(self):

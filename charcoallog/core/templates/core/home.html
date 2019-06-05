@@ -18,4 +18,14 @@
 {% block head_javascript %}
 <script src="https://unpkg.com/vue@2.5.22/dist/vue.js"></script>
 <script src="{% static 'vue_style.js' %}"></script>
+
+{# Vue ajax for line3.html #}
+{# Vue 2.6.10 needs change @click="dflt()" > submitForm event.target."(button|checkbox)".value #}
+<script src="https://unpkg.com/vue@2.5.17/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="{% static 'bank/vue_templates/bank_ajax_vue.js' %}"></script>
+<script src="{% static 'bank/vue_templates/summary.js' %}"></script>
+{# <script src="{% static 'bank/vue_templates/add_rm_account.js' %}"></script> #}
+<script src="{% static 'core/show_accounts.js' %}"></script>
+
 {% endblock %}
