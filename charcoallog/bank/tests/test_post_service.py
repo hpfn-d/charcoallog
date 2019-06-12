@@ -174,3 +174,52 @@ class TransferScheduleTest(TestCase):
 
         # description startswith
         self.assertIn('credit from', qs.description)
+
+
+class AllRemainingMonths(TestCase):
+    def setUp(self):
+        self.user = 'teste'
+        self.account_1 = 'principal'
+        self.value = '-10.00'
+
+        self.data = dict(
+            date='2017-06-21',
+            money=self.value,
+            description='recurrent description',
+            category='remaining',
+            payment=self.account_1,
+            schedule=True
+        )
+        self.query_user = Extract.objects.user_logged(self.user)
+        RQST.method = "POST"
+        RQST.POST = self.data
+        RQST.user = self.user
+        MethodPost(RQST, self.query_user)
+
+    def test_count_records(self):
+        c = Schedule.objects.all().count()
+        self.assertEqual(c, 7)
+
+    def test_description(self):
+        """ recurrent word not in description """
+        d = Schedule.objects.get(pk=1)
+        self.assertEqual('description', d.description)
+
+    def test_months(self):
+        d = Schedule.objects.all()
+        items = [
+            ('2017-06-21', d[6].date.strftime("%Y-%m-%d")),
+            ('2017-07-21', d[5].date.strftime("%Y-%m-%d")),
+            ('2017-08-21', d[4].date.strftime("%Y-%m-%d")),
+            ('2017-09-21', d[3].date.strftime("%Y-%m-%d")),
+            ('2017-10-21', d[2].date.strftime("%Y-%m-%d")),
+            ('2017-11-21', d[1].date.strftime("%Y-%m-%d")),
+            ('2017-12-21', d[0].date.strftime("%Y-%m-%d")),
+        ]
+        for e, r in items:
+            with self.subTest():
+                self.assertEqual(e, r)
+
+    def tearDown(self):
+        d = Schedule.objects.all()
+        d.delete()

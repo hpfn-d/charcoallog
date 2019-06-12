@@ -1,3 +1,4 @@
+import datetime as dt
 import json
 from decimal import Decimal
 
@@ -29,7 +30,8 @@ class ScheduleData:
 
     @property
     def schedule_json(self):
-        return serialize("json", self.query_schedule.all())
+        today = dt.datetime.today().strftime("%m")
+        return serialize("json", self.query_schedule.filter(date__month__lte=today))
 
 
 class Summary:
