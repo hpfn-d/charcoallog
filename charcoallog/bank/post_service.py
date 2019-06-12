@@ -6,15 +6,13 @@ from .forms import EditExtractForm
 
 
 class MethodPost:
-    def __init__(self, request, query_user):
+    def __init__(self, request):
         """
         :param request: request from views
-        :param query_user: Extract models instance
         """
         # self.request_method = request_method
         self.request_post = request.POST
         self.request_user = request.user
-        self.query_user = query_user
         self.editextractform = EditExtractForm
         self.form = None
 
