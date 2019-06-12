@@ -1,3 +1,5 @@
+import datetime as dt
+
 from charcoallog.bank.models import Extract, Schedule
 
 from .forms import EditExtractForm
@@ -54,10 +56,39 @@ def to_extract(user, data):
 
 
 def to_schedule(user, data):
-    Schedule.objects.create(user_name=user, **data)
+    """
+    create one record in Schedule
+    or
+    create a record to all the remaining months of the year
+    """
+    todo_list = [data]
+    if data['description'].startswith('recurrent'):
+        todo_list = treat_recurrent(data)
+
+    for item in todo_list:
+        Schedule.objects.create(user_name=user, **item)
+
+
+def treat_recurrent(data):
+    todo_list = []
+
+    # remove recurrent word
+    description = data['description'].rpartition('recurrent')
+    description = description[-1].strip()
+    data['description'] = description
+
+    # set remaining months
+    d = data['date']
+    for m in range(d.month, 13):
+        recurrent = {**data}
+        recurrent.update(date=dt.datetime(d.year, m, d.day))
+        todo_list.append(recurrent)
+
+    return todo_list
 
 
 INSERT_TO = dict(
     to_extract=to_extract,
     to_schedule=to_schedule
+
 )
