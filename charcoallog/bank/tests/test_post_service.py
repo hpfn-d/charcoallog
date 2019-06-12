@@ -25,11 +25,10 @@ class ValidPostMethod(TestCase):
             # pk=''
         )
 
-        self.query_user = Extract.objects.user_logged(self.user)
         RQST.method = 'POST'
         RQST.POST = self.data
         RQST.user = self.user
-        self.response = MethodPost(RQST, self.query_user)
+        self.response = MethodPost(RQST)
 
     def test_editextractform_instance(self):
         """
@@ -72,26 +71,25 @@ class TransferBetweenAccounts(TestCase):
             payment=self.account_1,
         )
 
-        self.query_user = Extract.objects.user_logged(self.user)
         RQST.method = "POST"
         RQST.POST = self.data
         RQST.user = self.user
-        self.response = MethodPost(RQST, self.query_user)
+        self.response = MethodPost(RQST)
 
     def test_negative_transfer_name(self):
-        p_data = self.query_user.get(id=1)
+        p_data = Extract.objects.user_logged(self.user).get(id=1)
         self.assertEqual(p_data.payment, self.account_1)
 
     def test_negative_transfer_value(self):
-        p_data = self.query_user.get(id=1)
+        p_data = Extract.objects.user_logged(self.user).get(id=1)
         self.assertEqual(p_data.money, Decimal(self.value))
 
     def test_positive_transfer_name(self):
-        c_c_data = self.query_user.get(id=2)
+        c_c_data = Extract.objects.user_logged(self.user).get(id=2)
         self.assertEqual(c_c_data.payment, self.account_2)
 
     def test_positive_transfer_value(self):
-        c_c_data = self.query_user.get(id=2)
+        c_c_data = Extract.objects.user_logged(self.user).get(id=2)
         self.assertEqual(c_c_data.money, Decimal(self.value_after_transfer))
 
 
@@ -108,11 +106,10 @@ class ScheduleTest(TestCase):
             schedule=True,
         )
 
-        self.query_user = Extract.objects.user_logged(self.user)
         RQST.method = "POST"
         RQST.POST = self.data
         RQST.user = self.user
-        self.response = MethodPost(RQST, self.query_user)
+        self.response = MethodPost(RQST)
 
     def test_record_in_models(self):
         # self.assertTrue(Extract.objects.get(id=1))
@@ -145,11 +142,11 @@ class TransferScheduleTest(TestCase):
             payment=self.account_1,
             schedule=True
         )
-        self.query_user = Extract.objects.user_logged(self.user)
+
         RQST.method = "POST"
         RQST.POST = self.data
         RQST.user = self.user
-        self.response = MethodPost(RQST, self.query_user)
+        self.response = MethodPost(RQST)
 
     def test_no_extract_record(self):
         n_record = Extract.objects.all().count()
@@ -190,11 +187,11 @@ class AllRemainingMonths(TestCase):
             payment=self.account_1,
             schedule=True
         )
-        self.query_user = Extract.objects.user_logged(self.user)
+
         RQST.method = "POST"
         RQST.POST = self.data
         RQST.user = self.user
-        MethodPost(RQST, self.query_user)
+        MethodPost(RQST)
 
     def test_count_records(self):
         c = Schedule.objects.all().count()
