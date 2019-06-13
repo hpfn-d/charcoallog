@@ -51,6 +51,8 @@ class MethodGet:
             self.query_default = bills
             self.extract_json = serialize("json", self.query_default)
         else:
+            # qs = Schedule.objects.user_logged('teste').all()
+            # self.extract_json = serialize("json", qs)
             messages.error(
                 self.request,
                 "' %s ' - Invalid search or nothing for these dates." % column

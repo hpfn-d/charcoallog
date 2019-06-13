@@ -21,8 +21,11 @@ class ShowData:
 
 
 class ScheduleData:
+    today = dt.datetime.today().strftime("%m")
+
     def __init__(self, request_user):
-        self.query_schedule = Schedule.objects.user_logged(request_user)
+        self.query_schedule = Schedule.objects.user_logged(request_user).filter(
+            date__month__lte=self.today)
 
     @property
     def brief_schedule(self):
@@ -30,8 +33,7 @@ class ScheduleData:
 
     @property
     def schedule_json(self):
-        today = dt.datetime.today().strftime("%m")
-        return serialize("json", self.query_schedule.filter(date__month__lte=today))
+        return serialize("json", self.query_schedule)
 
 
 class Summary:
