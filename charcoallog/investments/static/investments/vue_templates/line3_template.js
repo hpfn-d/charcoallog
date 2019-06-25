@@ -1,6 +1,6 @@
 Vue.component('all-reg-forms', {
     // props: ['pk', 'date', 'money', 'kind', 'tx_op', 'brokerage'],
-    props: ['csrf', 'data'],  // color? no schedule here
+    props: ['home_api', 'details_api', 'csrf', 'data'],  // color? no schedule here
     template:`
         <form @submit.prevent="submitForm($event)" :id="pk">
 
@@ -83,11 +83,12 @@ Vue.component('all-reg-forms', {
                 </div>
 
                 <div v-if="!isNaN(mn)">
-                <div class="form-inline m-0 p-0 bg-light" v-if="this.data.fields.kind != '---'">
-                <input type="checkbox" id="checkbox" v-model:value="chk" v-bind="label()">
-                <span class="form-text text-muted" style="font-size:9px">update</span>
-                <button type="submit" class="btn btn-sm m-0 p-0 btn-link" size="6" id="button" @click="dflt()">{{ method }}</button>
-                </div>
+                    <div class="form-inline m-0 p-0 bg-light" v-if="this.data.fields.kind != '---'">
+                        <input type="checkbox" id="checkbox" v-model:value="chk" v-bind="label()">
+                        <span class="form-text text-muted" style="font-size:9px">update</span>
+                        <button type="submit" class="btn btn-sm m-0 p-0 btn-link" size="6"
+                                id="button" @click="dflt()">{{ method }}</button>
+                    </div>
                 </div>
                 <div v-else class="form-inline m-0 p-0 bg-light">
                 <input size='12'
@@ -112,7 +113,10 @@ Vue.component('all-reg-forms', {
             knd: this.data.fields.kind,
             mn: this.data.fields.money,
             dt: this.data.fields.date,
-            pk: this.data.pk
+            pk: this.data.pk,
+            h_url: this.home_api.replace('10101010', this.data.pk),
+            d_url: this.details_api.replace('10101010', this.data.pk),
+            to_url: ''  // this.d_url ? this.d_url : this.h_url
         }
     },
     computed: {
@@ -155,9 +159,9 @@ Vue.component('all-reg-forms', {
             this.chk = false
         },
         label: function(){
-             console.log(this.mn)
              this.method = this.chk ? 'update' : 'delete';
-             this.edit = this.chk == false ? true : false
+             this.edit = this.chk == false ? true : false;
+             this.to_url = this.d_url ? this.d_url : this.h_url
         },
         submitForm: function(event) {
             var form = {}
@@ -171,17 +175,14 @@ Vue.component('all-reg-forms', {
                 form["brokerage"] = event.target.brokerage.value;
             }
             
-            _url = '/investments/home_api/'
-
             // details
             if (event.target.hasOwnProperty('tx_or_price')) {
                 form["tx_or_price"] = Number(event.target.tx_or_price.value);
                 form["segment"] = event.target.segment.value;
                 form["which_target"] = event.target.which_target.value;
                 form['quant'] = Number(event.target.quant.value);
-                _url = '/investments/details/detail_api/'
             }
-            
+
             event.target.checkbox.checked = false
             http_verb = event.target.button.innerText
             http_verb = http_verb == 'delete' ? 'delete' : 'put'
@@ -191,7 +192,7 @@ Vue.component('all-reg-forms', {
 
             axios({
                 method: http_verb,
-                url: _url + form["pk"] + '/',
+                url: this.to_url,
                 data: form
             })
             .then(response => {

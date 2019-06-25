@@ -42,6 +42,8 @@
                                             "quant":"quant"
                                         }
                                     }'
+                                    home_api=''
+                                    details_api=''
                             ></all-reg-forms>
                         </div>
 
@@ -52,6 +54,8 @@
                                     csrf='{{ csrf_token }}'
                                     v-bind:data="invest"
                                     v-bind:key="invest.pk"
+                                    home_api=''
+                                    details_api="{% url 'investments:details_api' 10101010 %}"
                             ></all-reg-forms>
                         </div>
                     </span>
