@@ -85,9 +85,9 @@ class ScheduleApi(LoginRequiredMixin, APIView):
         serializer = ScheduleSerializer(bill, data=request.data)
         if serializer.is_valid():
             serializer.update(bill, serializer.validated_data)
-            schdl = Schedule.objects.user_logged(request.user)
-            schdl = build_json_data(schdl)
-            return Response(schdl)
+            schdl = ScheduleData(request.user)
+            w_left = schdl.brief_schedule.whats_left()
+            return Response(w_left)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):

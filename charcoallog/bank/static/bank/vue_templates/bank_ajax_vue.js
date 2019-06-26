@@ -1,6 +1,6 @@
 Vue.component('all-reg-forms', {
     //props: ['color', 'csrf','pk', 'date', 'money', 'description', 'category', 'payment'],
-    props: ['color', 'csrf', 'data'],
+    props: ['color', 'csrf', 'data', 'url_api'],
     template:`
             <form @submit.prevent="submitForm($event)" :id="pk">
 
@@ -73,7 +73,8 @@ Vue.component('all-reg-forms', {
             dscrptn: this.data.fields.description,
             mn: this.data.fields.money,
             dt: this.data.fields.date,
-            pk: this.data.pk
+            pk: this.data.pk,
+            to_url: this.url_api.replace('10101010', this.data.pk)
         }
     },
     computed: {
@@ -172,26 +173,28 @@ Vue.component('all-reg-forms', {
             axios.defaults.xsrfHeaderName = "X-CSRFToken";
             axios.defaults.xsrfCookieName = "csrftoken";
 
-            var url = this.color == "purple" ? 'schedule_api/' : 'home_api/';
-
             axios({
                 method: http_verb,
-                url: url + form["pk"] + '/',
+                url: this.to_url,
                 data: form,
             }).then(response => {
+                var has_schdl_api = this.to_url.indexOf('schedule_api')
+                var has_home_api =  this.to_url.indexOf('home_api')
+
                 if ( http_verb == 'delete' && response.status == 204) {
-                    if (url == 'schedule_api/') {
+                    if (has_schdl_api >= 0) {
                         this.schedule_del(form["money"], form["pk"])
                     }
-                    if (url == 'home_api/') {
+                    if (has_home_api >= 0) {
                         this.extract_del(form["money"], form["payment"], form["pk"])
                     }
                 }
                 if ( http_verb == 'put' && response.status == 200) {
-                    if (url == 'schedule_api/') {
-                        this.schedule_put(response.data.whats_left)
+                    if (has_schdl_api >= 0) {
+                        var w_left = response.data
+                        this.schedule_put(w_left)
                     }
-                    if (url == 'home_api/') {
+                    if (has_home_api >= 0) {
                         var accounts = response.data.accounts
                         var w_left = response.data.whats_left
                         this.extract_put(accounts, w_left, old_payment, form["payment"])
