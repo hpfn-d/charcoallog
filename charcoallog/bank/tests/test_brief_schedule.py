@@ -1,3 +1,4 @@
+import datetime as dt
 import json
 from decimal import Decimal
 
@@ -41,6 +42,9 @@ class BriefScheduleTest(TestCase):
 
 class UpdateScheduleApi(TestCase):
     def setUp(self):
+        now = dt.datetime.today()
+        now_str = now.strftime("%Y-%m-%d")
+
         user_name = 'teste'
 
         user = User.objects.create(username=user_name)
@@ -51,7 +55,7 @@ class UpdateScheduleApi(TestCase):
 
         data = dict(
             user_name=user_name,
-            date='2017-12-21',
+            date=now_str,
             money='10.00',
             description='test',
             category='test',
@@ -73,20 +77,26 @@ class UpdateScheduleApi(TestCase):
     def test_data_exists(self):
         self.assertTrue(Schedule.objects.filter(pk=1).exists())
 
-    def test_json_data(self):
+    def test_db_record_value(self):
+        qs = Schedule.objects.all()
+        money = str(qs[0].money)
+        self.assertEqual('20.00', money)
+
+    def test_db_record(self):
         """
             whats_left attribute must be 20.00 now
         """
-        expected = [
-            'principal',
-            '20.0',
-            'whats_left',
-            '20.0'
-        ]
-
-        for value in expected:
-            with self.subTest():
-                self.assertIn(value, self.response.content.decode())
+        # expected = [
+        #     'principal',
+        #     '20.0',
+        #     'whats_left',
+        #     '20.0'
+        # ]
+        #
+        # for value in expected:
+        #     with self.subTest():
+        #        self.assertIn(value, self.response.content.decode())
+        self.assertEqual('20.0', self.response.content.decode())
 
 
 class DeleteScheduleApi(TestCase):
