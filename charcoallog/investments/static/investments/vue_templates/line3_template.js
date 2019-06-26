@@ -1,6 +1,6 @@
 Vue.component('all-reg-forms', {
     // props: ['pk', 'date', 'money', 'kind', 'tx_op', 'brokerage'],
-    props: ['home_api', 'details_api', 'csrf', 'data'],  // color? no schedule here
+    props: ['url_api', 'csrf', 'data'],  // color? no schedule here
     template:`
         <form @submit.prevent="submitForm($event)" :id="pk">
 
@@ -114,9 +114,7 @@ Vue.component('all-reg-forms', {
             mn: this.data.fields.money,
             dt: this.data.fields.date,
             pk: this.data.pk,
-            h_url: this.home_api.replace('10101010', this.data.pk),
-            d_url: this.details_api.replace('10101010', this.data.pk),
-            to_url: ''  // this.d_url ? this.d_url : this.h_url
+            to_url: this.url_api.replace('10101010', this.data.pk),
         }
     },
     computed: {
@@ -161,7 +159,6 @@ Vue.component('all-reg-forms', {
         label: function(){
              this.method = this.chk ? 'update' : 'delete';
              this.edit = this.chk == false ? true : false;
-             this.to_url = this.d_url ? this.d_url : this.h_url
         },
         submitForm: function(event) {
             var form = {}

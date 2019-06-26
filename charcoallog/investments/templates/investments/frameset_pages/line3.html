@@ -11,8 +11,7 @@
                 csrf='{{ csrf_token }}'
                 v-bind:data="invest"
                 v-bind:key="invest.pk"
-                home_api='{% url "investments:home_api" 10101010 %}'
-                details_api=''
+                url_api='{% url "investments:home_api" 10101010 %}'
         ></all-reg-forms>
     {% endif %}
 </div>
