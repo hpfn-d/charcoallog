@@ -81,18 +81,18 @@ class ServiceLayerTest(TestCase):
         self.assertIsInstance(self.schdl.query_schedule, QuerySet)
 
     def test_brief_schedule_instance(self):
-        self.assertIsInstance(self.schdl.brief_schedule, BriefBank)
+        self.assertIsInstance(self.schdl.brief_schedule(), BriefBank)
 
     def test_brief_schedule_account_names(self):
-        self.assertIn(self.account_name, self.schdl.brief_schedule.account_val_sorted())
+        self.assertIn(self.account_name, self.schdl.brief_schedule().account_val_sorted())
 
     def test_brief_schedule_whats_left(self):
         """
             whats_left attribute must be 10 for user teste
         """
-        content = self.schdl.brief_schedule.account_val_sorted()
+        content = self.schdl.brief_schedule().account_val_sorted()
         self.assertIn('principal', content)
-        content = self.schdl.brief_schedule.whats_left()
+        content = self.schdl.brief_schedule().whats_left()
         self.assertEqual(Decimal('10'), content)
 
     def test_summary_instance(self):

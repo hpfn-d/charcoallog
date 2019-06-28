@@ -17,7 +17,7 @@ class ShowData:
         self.form1 = MethodPost(request)
         self.form2 = MethodGet(request, self.query_bank)
         self.brief_bank = BriefBank(self.query_bank)
-        self.summary_categories = Summary(self.query_bank).summary_categories
+        self.summary_categories = Summary(self.query_bank).summary_categories()
 
 
 class ScheduleData:
@@ -27,11 +27,9 @@ class ScheduleData:
         self.query_schedule = Schedule.objects.user_logged(request_user).filter(
             date__month__lte=self.today)
 
-    @property
     def brief_schedule(self):
         return BriefBank(self.query_schedule)
 
-    @property
     def schedule_json(self):
         return serialize("json", self.query_schedule)
 
@@ -44,7 +42,6 @@ class Summary:
     def __init__(self, qs):
         self.month_summary = qs.summary(self.year, self.month)
 
-    @property
     def summary_categories(self):
         summary = self.categories()
         return json.dumps(summary, default=serialize_decimal)

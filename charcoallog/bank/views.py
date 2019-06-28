@@ -21,8 +21,8 @@ def home(request):
 
     context = {
         'show_data': show_data,
-        'schedule_data': schedule_data.brief_schedule,
-        'schedule': schedule_data.schedule_json,
+        'schedule_data': schedule_data.brief_schedule(),
+        'schedule': schedule_data.schedule_json(),
         'extract': show_data.form2.extract_json,
         'summary': show_data.summary_categories,
     }
@@ -86,7 +86,7 @@ class ScheduleApi(LoginRequiredMixin, APIView):
         if serializer.is_valid():
             serializer.update(bill, serializer.validated_data)
             schdl = ScheduleData(request.user)
-            w_left = schdl.brief_schedule.whats_left()
+            w_left = schdl.brief_schedule().whats_left()
             return Response(w_left)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
