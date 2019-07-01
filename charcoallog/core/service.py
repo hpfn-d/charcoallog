@@ -78,4 +78,4 @@ def wrap_year_month(query_bank, all_year_month, summary, m):
     last = query_bank.summary(summary.year, month)
     if last:
         summary.month_summary = last
-        all_year_month.append(summary.summary_categories)
+        all_year_month.append(summary.summary_categories())
