@@ -1,0 +1,12 @@
+[{
+  "model": "bank.Schedule",
+  "pk": 1,
+  "fields": {
+    "user_name": "test",
+    "date": "2017-12-21",
+    "money": "10.00",
+    "description": "test",
+    "category": "test",
+    "payment": "principal"
+  }
+}]

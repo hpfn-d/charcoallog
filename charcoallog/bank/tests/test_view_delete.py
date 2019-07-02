@@ -1,6 +1,5 @@
 # import json
 
-from django.contrib.auth.models import User
 from django.shortcuts import resolve_url as r
 from django.test import TestCase
 
@@ -8,10 +7,12 @@ from charcoallog.bank.models import Extract
 
 
 class AjaxPostTest(TestCase):
+    fixtures = ['user.json']
+
     def setUp(self):
-        user_name = 'teste'
+        self.user_name = 'test'
         self.data = dict(
-            user_name=user_name,
+            user_name=self.user_name,
             date='2017-12-21',
             money='10.00',
             description='test',
@@ -20,9 +21,9 @@ class AjaxPostTest(TestCase):
         )
         Extract.objects.create(**self.data)
 
-        # the return after delete
+        # keep tihs one
         update_test = dict(
-            user_name=user_name,
+            user_name=self.user_name,
             date='2017-12-21',
             money='10.00',
             description='test',
@@ -31,17 +32,13 @@ class AjaxPostTest(TestCase):
         )
         Extract.objects.create(**update_test)
 
-        user = User.objects.create(username=user_name)
-        user.set_password('1qa2ws3ed')
-        user.save()
-
-        self.login_in = self.client.login(username=user_name, password='1qa2ws3ed')
+        self.login_in = self.client.login(username=self.user_name, password='1qa2ws3ed')
 
     def test_login_ok(self):
         self.assertTrue(self.login_in)
 
     def test_count_records(self):
-        self.assertEqual(2, Extract.objects.filter(user_name='teste').count())
+        self.assertEqual(2, Extract.objects.filter(user_name=self.user_name).count())
 
     def test_ajax_remove(self):
         """
@@ -57,8 +54,17 @@ class AjaxPostTest(TestCase):
         self.data['pk'] = obj.pk
         response = self.client.delete(r('bank:home_api', obj.pk))
 
-        self.assertEqual(response.status_code, 204)
-        self.assertEqual(1, Extract.objects.filter(user_name='teste').count())
-        self.assertEqual(0, Extract.objects.filter(payment='principal').count())
-        # response is empty after delete
-        self.assertFalse(response.content.decode())
+        keep = Extract.objects.filter(user_name=self.user_name).count()
+        no_principal = Extract.objects.filter(payment='principal').count()
+        no_return = response.content.decode()
+
+        expected = [
+            (response.status_code, 204),
+            (1, keep),
+            (0, no_principal),
+            (no_return, '')
+        ]
+
+        for resp, e in expected:
+            with self.subTest():
+                self.assertEqual(resp, e)

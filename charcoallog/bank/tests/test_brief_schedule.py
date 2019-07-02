@@ -2,7 +2,6 @@ import datetime as dt
 import json
 from decimal import Decimal
 
-from django.contrib.auth.models import User
 from django.shortcuts import resolve_url as r
 from django.test import TestCase
 
@@ -11,20 +10,12 @@ from charcoallog.bank.models import Schedule
 
 
 class BriefScheduleTest(TestCase):
-    def setUp(self):
-        user_name = 'teste'
-        self.account_name = 'principal'
-        data = dict(
-            user_name=user_name,
-            date='2017-12-21',
-            money='10.00',
-            description='test',
-            category='test',
-            payment=self.account_name
-        )
+    fixtures = ['schedule_data.json']
 
-        Schedule.objects.create(**data)
-        query_user = Schedule.objects.user_logged(user_name)
+    def setUp(self):
+        self.account_name = 'principal'
+
+        query_user = Schedule.objects.user_logged('test')
         self.response = BriefBank(query_user)
         self.brief_schedule_account_name = self.response.account_val_sorted()
 
@@ -41,17 +32,15 @@ class BriefScheduleTest(TestCase):
 
 
 class UpdateScheduleApi(TestCase):
+    fixtures = ['user.json']
+
     def setUp(self):
         now = dt.datetime.today()
         now_str = now.strftime("%Y-%m-%d")
 
-        user_name = 'teste'
+        user_name = 'test'
 
-        user = User.objects.create(username=user_name)
-        user.set_password('1m2n3b4v')
-        user.save()
-
-        self.login_in = self.client.login(username=user_name, password='1m2n3b4v')
+        self.login_in = self.client.login(username=user_name, password='1qa2ws3ed')
 
         data = dict(
             user_name=user_name,
@@ -86,42 +75,14 @@ class UpdateScheduleApi(TestCase):
         """
             whats_left attribute must be 20.00 now
         """
-        # expected = [
-        #     'principal',
-        #     '20.0',
-        #     'whats_left',
-        #     '20.0'
-        # ]
-        #
-        # for value in expected:
-        #     with self.subTest():
-        #        self.assertIn(value, self.response.content.decode())
         self.assertEqual('20.0', self.response.content.decode())
 
 
 class DeleteScheduleApi(TestCase):
+    fixtures = ['schedule_data.json', 'user.json']
+
     def setUp(self):
-        user_name = 'teste'
-
-        user = User.objects.create(username=user_name)
-        user.set_password('1m2n3b4v')
-        user.save()
-
-        self.login_in = self.client.login(username=user_name, password='1m2n3b4v')
-
-        data = dict(
-            user_name=user_name,
-            date='2017-12-21',
-            money='10.00',
-            description='test',
-            category='test',
-            payment='principal'
-        )
-
-        Schedule.objects.create(**data)
-        data['money'] = '20.00'
-        # self.client = Client(enforce_csrf_checks=True)
-        # self.client.enforce_csrf_checks = True
+        self.login_in = self.client.login(username='test', password='1qa2ws3ed')
         self.response = self.client.delete(r('bank:schedule_api', 1))
 
     def test_login(self):

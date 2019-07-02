@@ -7,25 +7,15 @@ from charcoallog.bank.models import Extract
 
 
 class BriefBankTest(TestCase):
-    def setUp(self):
-        user_name = 'teste'
-        self.account_name = 'principal'
-        data = dict(
-            user_name=user_name,
-            date='2017-12-21',
-            money='10.00',
-            description='test',
-            category='test',
-            payment=self.account_name
-        )
+    fixtures = ['extract_data.json']
 
-        Extract.objects.create(**data)
-        query_user = Extract.objects.user_logged(user_name)
+    def setUp(self):
+        query_user = Extract.objects.user_logged('test')
         self.response = BriefBank(query_user)
         self.brief_bank_account_name = self.response.account_val_sorted()
 
     def test_line1_account_names(self):
-        self.assertIn(self.account_name, self.brief_bank_account_name)
+        self.assertIn('principal', self.brief_bank_account_name)
 
     def test_line1_whats_left(self):
         """
