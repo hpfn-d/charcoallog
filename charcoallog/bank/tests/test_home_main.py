@@ -1,4 +1,3 @@
-from django.contrib.auth.models import User
 from django.shortcuts import resolve_url as r
 from django.test import TestCase
 
@@ -13,12 +12,10 @@ class HomeFailTest(TestCase):
 
 
 class HomeOKTest(TestCase):
-    def setUp(self):
-        user = User.objects.create(username='teste')
-        user.set_password('1qa2ws3ed')
-        user.save()
+    fixtures = ['user.json']
 
-        self.login_in = self.client.login(username='teste', password='1qa2ws3ed')
+    def setUp(self):
+        self.login_in = self.client.login(username='test', password='1qa2ws3ed')
         self.response = self.client.get(r('bank:home'))
 
     def test_login(self):

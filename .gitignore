@@ -1,4 +1,5 @@
 # domestic stuff
+*BKUP
 .project_env
 db.sqlite3
 .idea/
@@ -8,7 +9,6 @@ staticfiles
 charcoallog_nginx.conf
 uwsgi.ini
 celerybeat*
-*.json
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

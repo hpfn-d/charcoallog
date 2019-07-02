@@ -1,4 +1,3 @@
-from django.contrib.auth.models import User
 from django.db.models import QuerySet
 from django.shortcuts import resolve_url as r
 from django.test import TestCase
@@ -28,19 +27,10 @@ class InvalidGetMethod(TestCase):
 
 
 class ValidGetMethod(TestCase):
+    fixtures = ['extract_data.json']
+
     def setUp(self):
-        data = dict(
-            user_name='teste',
-            date='2017-12-21',
-            money='10.00',
-            description='test',
-            category='test',
-            payment='principal'
-        )
-
-        Extract.objects.create(**data)
-
-        query_user = Extract.objects.user_logged('teste')
+        query_user = Extract.objects.user_logged('test')
         search_data = dict(column='all', from_date='2017-12-01', to_date='2017-12-31')
         RQST.method = "GET"
         RQST.GET = search_data
@@ -67,12 +57,10 @@ class ValidGetMethod(TestCase):
 # I do not know how to pretend a complete request(RQST)
 # to show an 'messages.error()
 class InvalidSearch(TestCase):
-    def setUp(self):
-        user = User.objects.create(username='teste')
-        user.set_password('1qa2ws3ed')
-        user.save()
+    fixtures = ['user.json']
 
-        self.login_in = self.client.login(username='teste', password='1qa2ws3ed')
+    def setUp(self):
+        self.login_in = self.client.login(username='test', password='1qa2ws3ed')
         search_data = dict(column='all', from_date='2017-01-01', to_date='2017-01-01')
         self.response = self.client.get(r('bank:home'), search_data)
 
