@@ -57,6 +57,8 @@ class BuildHomeTest(TestCase):
 
 
 class CoreSummary(TestCase):
+    fixtures = ['core_user.json']
+
     def setUp(self):
         """
         dict[year][user]
@@ -64,8 +66,7 @@ class CoreSummary(TestCase):
         teste1 - 2018, one record
         teste1 - 2019, one record
 
-        teste2 - 2018, two records
-        teste2 - 2019, two records
+        teste2 - 2019, one record
 
         """
         self.now = dt.datetime.today()
@@ -96,7 +97,7 @@ class CoreSummary(TestCase):
 
     def test_year_summary(self):
         """ check first key - year """
-        self.assertIn(str(self.now.year), list(self.to_json.keys()))
+        self.assertIn(str(self.now.year), self.to_json.keys())
 
     def test_users_summary(self):
         """ two users """
@@ -122,3 +123,19 @@ class CoreSummary(TestCase):
 
     def tearDown(self):
         os.remove(SUMMARY)
+
+
+class CoreSummaryNoData(TestCase):
+    fixtures = ['core_user.json']
+
+    def setUp(self):
+        self.now = dt.datetime.today()
+        self.to_json = collect_summary()
+
+    def test_has_user(self):
+        self.assertIn('teste1', self.to_json[str(self.now.year)].keys())
+        self.assertIn('teste2', self.to_json[str(self.now.year)].keys())
+
+    def test_no_data(self):
+        self.assertFalse(self.to_json[str(self.now.year)]['teste1'])
+        self.assertFalse(self.to_json[str(self.now.year)]['teste2'])

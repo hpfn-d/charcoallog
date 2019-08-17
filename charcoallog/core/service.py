@@ -2,6 +2,8 @@ import datetime as dt
 import json
 import os
 
+from django.contrib.auth.models import User
+
 from charcoallog.bank.brief_bank_service import BriefBank
 from charcoallog.bank.models import Extract
 from charcoallog.bank.service import Summary
@@ -46,8 +48,9 @@ def collect_summary():
     to_json = {year: dict()}
 
     for who in all_users():
-        all_year_month, year = year_summary(who)
-        to_json[year].update({who: all_year_month})
+        w = str(who)
+        all_year_month, year = year_summary(w)
+        to_json[year].update({w: all_year_month})
 
     with open(SUMMARY, 'w') as fd:
         json.dump(to_json, fd)
@@ -57,8 +60,7 @@ def collect_summary():
 
 # collect_summary helpers
 def all_users():
-    all_u = Extract.objects.all().values_list('user_name', flat=True)
-    return set(all_u)
+    return (u for u in User.objects.all())
 
 
 def year_summary(who):
