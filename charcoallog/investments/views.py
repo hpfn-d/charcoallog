@@ -2,6 +2,7 @@ import json
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Sum
 from django.shortcuts import Http404, render
 from rest_framework import status
 from rest_framework.response import Response
@@ -37,8 +38,10 @@ def home(request):
 def newinvestmetdetails_detail(request, kind):
     # post = DetailPost(request)  # noqa F841
     kind_qs = inheritance_serializer(request.user, kind)
+    w_target_quant = kind_quant(request.user)
 
     context = {
+        'w_target': w_target_quant,
         'newinvestmentdetails': json.dumps(kind_qs),
         # 'form': InvestmentDetailsForm()
     }
@@ -102,10 +105,9 @@ class DetailApi(LoginRequiredMixin, APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-# HELPER
+# HELPERS
 def inheritance_serializer(request_user, kind):
     qs_kind_details = NewInvestmentDetails.objects.user_logged(request_user).kind(kind)
-    # all_model = list()
     all_model = [
         {
             'pk': i.pk,
@@ -118,33 +120,19 @@ def inheritance_serializer(request_user, kind):
                 'tx_or_price': str(i.tx_or_price),
                 'quant': str(i.quant)}
         }
+
         for i in qs_kind_details]
 
     return all_model
 
-# qs_kind_details = NewInvestmentDetails.objects.user_logged(request.user).kind(kind)
-# [
-#     {
-#         "pk": "4b678b301dfd8a4e0dad910de3ae245b",
-#         "model": "sessions.session",
-#         "fields": {
-#             "expire_date": "2013-01-16T08:16:59.844Z",
-#             ...
-#         }
-#     }
-# ]
 
-# all_kind_dict = list()
-# for i in qs_kind_details:
-#     d = {
-#         'pk': i.pk,
-#         'fields': {
-#             'date': i.date.strftime("%Y-%m-%d"),
-#             'money': str(i.money),
-#             'kind': i.kind,
-#             'which_target': i.which_target,
-#             'segment': i.segment,
-#             'tx_or_price': str(i.tx_or_price),
-#             'quant': str(i.quant)}
-#     }
-#     all_kind_dict.append(d)
+def kind_quant(u):
+    w_t = NewInvestmentDetails.objects.user_logged(u).values_list('which_target')
+    w_t = set(w_t)
+    choosen_one = {
+        x[0]: NewInvestmentDetails.objects.user_logged(u).filter(
+            which_target=x[0]).aggregate(Sum('quant'))['quant__sum']
+        for x in w_t
+    }
+
+    return choosen_one
