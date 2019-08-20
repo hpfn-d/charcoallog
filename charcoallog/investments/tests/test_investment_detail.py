@@ -119,7 +119,7 @@ class InvestmentDetailTest(TestCase):
             user_name='teste',
             date=self.date,
             money=self.money,
-            kind=self.kind,
+            kind='FAKE',
             which_target='ORUIM',
             segment=self.segment,
             tx_or_price=self.tx_or_price,
@@ -128,7 +128,7 @@ class InvestmentDetailTest(TestCase):
 
         NewInvestmentDetails.objects.create(**data)
         self.assertEqual(NewInvestmentDetails.objects.all().count(), 2)
-        quant = kind_quant('teste')
 
-        self.assertEqual(quant['ORUIM'], 35)
-        self.assertEqual(quant[self.which_target], 1)
+        for k, v, q in [(self.kind, self.which_target, 1), ('FAKE', 'ORUIM', 35)]:
+            quant = kind_quant('teste', k)
+            self.assertEqual(quant[v], q)

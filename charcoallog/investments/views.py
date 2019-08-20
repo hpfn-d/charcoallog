@@ -38,7 +38,7 @@ def home(request):
 def newinvestmetdetails_detail(request, kind):
     # post = DetailPost(request)  # noqa F841
     kind_qs = inheritance_serializer(request.user, kind)
-    w_target_quant = kind_quant(request.user)
+    w_target_quant = kind_quant(request.user, kind)
 
     context = {
         'w_target': w_target_quant,
@@ -126,8 +126,8 @@ def inheritance_serializer(request_user, kind):
     return all_model
 
 
-def kind_quant(u):
-    w_t = NewInvestmentDetails.objects.user_logged(u).values_list('which_target')
+def kind_quant(u, k):
+    w_t = NewInvestmentDetails.objects.user_logged(u).filter(kind=k).values_list('which_target')
     w_t = set(w_t)
     choosen_one = {
         x[0]: NewInvestmentDetails.objects.user_logged(u).filter(
