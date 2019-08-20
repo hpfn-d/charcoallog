@@ -6,6 +6,7 @@ from django.shortcuts import resolve_url as r
 from django.test import TestCase
 
 from charcoallog.investments.models import NewInvestmentDetails
+from charcoallog.investments.views import kind_quant
 
 
 class InvestmentDetailTest(TestCase):
@@ -25,7 +26,7 @@ class InvestmentDetailTest(TestCase):
         self.which_target = 'Tesouro Direto'
         self.segment = 'Selic'
         self.tx_or_price = '0.01'
-        self.quant = '1.00'
+        self.quant = '1'
 
         self.data = dict(
             user_name=user_n,
@@ -55,7 +56,9 @@ class InvestmentDetailTest(TestCase):
     def test_instances(self):
         expected = [
             # (self.resp.context['form'], InvestmentDetailsForm),
-            (self.resp.context['newinvestmentdetails'], str)
+            (self.resp.context['newinvestmentdetails'], str),
+            (self.resp.context['w_target'], dict),
+            # (self.resp.context['quant'], dict)
         ]
 
         for e, cls in expected:
@@ -77,7 +80,7 @@ class InvestmentDetailTest(TestCase):
             ('type="date"', 2),
             ('type="submit"', 1),
             ('</form>', 1),
-            ('class="row"', 4),
+            ('class="row', 5),
             ('method="get"', 1),
             # ('method="post"', 1),
             ('id="vue_ajax_detail"', 1),
@@ -109,3 +112,23 @@ class InvestmentDetailTest(TestCase):
         for v in data[0]['fields'].values():
             with self.subTest():
                 self.assertIn(v, expected)
+
+    def test_item_quant(self):
+        """ show quantity of each investment in details page """
+        data = dict(
+            user_name='teste',
+            date=self.date,
+            money=self.money,
+            kind=self.kind,
+            which_target='ORUIM',
+            segment=self.segment,
+            tx_or_price=self.tx_or_price,
+            quant=35,
+        )
+
+        NewInvestmentDetails.objects.create(**data)
+        self.assertEqual(NewInvestmentDetails.objects.all().count(), 2)
+        quant = kind_quant('teste')
+
+        self.assertEqual(quant['ORUIM'], 35)
+        self.assertEqual(quant[self.which_target], 1)

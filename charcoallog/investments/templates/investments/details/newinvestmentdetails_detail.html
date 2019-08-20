@@ -19,9 +19,11 @@
             </div>
             <div class="col-md-9">
                 <div class="container">
-                    <div class="row">
-                    a ser implementado
-                    {# {% include 'investments/frameset_pages/line1.html' %} #}
+                    <div class="row justify-content-center align-center m-0">
+                        <strong>total quantity of:</strong>
+                            {% for k, v in w_target.items %}
+                                {{ k }} - {{ v }}
+                            {% endfor %}
                     </div>
                 </div>
 
