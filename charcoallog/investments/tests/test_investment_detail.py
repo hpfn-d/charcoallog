@@ -53,6 +53,10 @@ class InvestmentDetailTest(TestCase):
     def test_template_used(self):
         self.assertTemplateUsed(self.resp, 'investments/details/newinvestmentdetails_detail.html')
 
+    def test_db_record_exists(self):
+        qs = NewInvestmentDetails.objects.filter(pk=1)
+        self.assertTrue(qs.exists())
+
     def test_instances(self):
         expected = [
             # (self.resp.context['form'], InvestmentDetailsForm),
@@ -153,25 +157,32 @@ class InvestmentDetailTest(TestCase):
         data['which_target'] = 't'
         data['quant'] = 15
         NewInvestmentDetails.objects.create(**data)
-        data['quant'] = 15
         NewInvestmentDetails.objects.create(**data)
-        data['quant'] = 15
         NewInvestmentDetails.objects.create(**data)
         data['which_target'] = 't_2'
         data['quant'] = 15
         NewInvestmentDetails.objects.create(**data)
+        data['which_target'] = 't_3'
+        data['quant'] = 20
+        NewInvestmentDetails.objects.create(**data)
+        NewInvestmentDetails.objects.create(**data)
+        NewInvestmentDetails.objects.create(**data)
+        NewInvestmentDetails.objects.create(**data)
 
-        self.assertEqual(NewInvestmentDetails.objects.all().count(), 7)
+        self.assertEqual(NewInvestmentDetails.objects.all().count(), 11)
 
         expected = [
             (self.kind, self.which_target, 1),
             ('FAKE', 'ORUIM', 50),
             ('Third', 't', 45),
             ('Third', 't_2', 15),
+            ('Third', 't_3', 80),
 
         ]
 
         for k, v, q in expected:
             quant, _ = kind_quant('teste', k)
             self.assertEqual(quant[v], q)
-            # self.assertEqual(d_json, {k: v})
+
+        for x in range(2, 12):
+            NewInvestmentDetails.objects.get(pk=x).delete()
