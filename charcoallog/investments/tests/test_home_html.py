@@ -44,7 +44,8 @@ class InvestmentHomeOkTest(TestCase):
             ('</form', 2),
             ('class="row"', 4),
             ('method="get"', 1),
-            ('method="post"', 1)
+            ('method="post"', 1),
+            ('maxlength="', 4),
         ]
         for tag, x in expected:
             with self.subTest():
