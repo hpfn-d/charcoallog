@@ -23,8 +23,8 @@ class ExtractStatementQuerySet(models.QuerySet):
             category__startswith='credit').exclude(
             category__startswith='transfer').exclude(category='investments')
 
-    def pay_or_cat(self, vl):
-        return self.filter(Q(payment=vl) | Q(category=vl))
+    # def pay_or_cat(self, vl):
+    #    return self.filter(Q(payment=vl) | Q(category=vl))
 
     # def category(self, vl):
     #    return self.filter(category=vl)

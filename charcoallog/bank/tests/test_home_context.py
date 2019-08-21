@@ -60,7 +60,7 @@ class HomeContextTest(TestCase):
         self.assertContains(self.response, 'csrfmiddlewaretoken', 2)
 
     def test_total_line3(self):
-        self.assertContains(self.response, 'None')
+        self.assertContains(self.response, '')
 
     def test_whats_left(self):
         """

@@ -4,7 +4,7 @@
             {% for key, value in names.items %}
                 <core_line1
 					key_="{{ key }}"
-					val="{{ value.money__sum | floatformat:2 }}"
+					val="{{ value | floatformat:2 }}"
 				></core_line1>
 			{% endfor %}
 

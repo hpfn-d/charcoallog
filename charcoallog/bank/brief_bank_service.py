@@ -8,6 +8,7 @@ class BriefBank:
     :type account_dict: dict
 
     """
+
     def __init__(self, query_user, col_name='payment'):
         self.query_user = query_user
         self.col_name = col_name
@@ -16,16 +17,22 @@ class BriefBank:
         self.build_dict()
 
     def build_dict(self):
-        self.account_dict = {
-            account[0]: self.query_user.pay_or_cat(account[0]).total()
-            for account in self.payment_iterator()
-        }
+        for col, m in self.payment_iterator():
+            if not self.account_dict.get(col, 0):
+                self.account_dict[col] = m
+            else:
+                self.account_dict[col] += m
+
+        # self.account_dict = {
+        #     account[0]: self.query_user.pay_or_cat(account[0]).total()
+        #     for account in self.payment_iterator()
+        # }
 
     def payment_iterator(self):
-        return set(self.query_user.values_list(self.col_name))
+        return self.query_user.values_list(self.col_name, 'money')
 
     def account_val_sorted(self):
         return OrderedDict(sorted(self.account_dict.items()))
 
     def whats_left(self):
-        return sum([money['money__sum'] for money in self.account_dict.values()])
+        return sum([money for money in self.account_dict.values()])

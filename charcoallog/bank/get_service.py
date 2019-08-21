@@ -18,7 +18,7 @@ class MethodGet:
         self.query_user = query_user
         self.extract_json = ''
         self.query_default = ''
-        self.query_default_total = ''
+        # self.query_default_total = ''
         self.get_form = SelectExtractForm(self.request.GET)
 
         self.build_request()
@@ -28,7 +28,7 @@ class MethodGet:
             self.search_from_get()
         else:
             self.query_default = self.query_user.filter(date__gte=self.month_01)
-            self.query_default_total = self.query_default.total()
+            # self.query_default_total = self.query_default.total()
             self.extract_json = serialize("json", self.query_default)
 
     def method_get(self):

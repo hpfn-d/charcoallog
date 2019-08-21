@@ -100,7 +100,7 @@ class ServiceLayerTest(TestCase):
 
     def test_summary_account_names(self):
         self.assertJSONEqual(
-            self.response.summary_categories, '{"test": {"money__sum": "10"}}'
+            self.response.summary_categories, '{"test": "10.00"}'
         )
 
     def test_summary_account_names_values(self):
@@ -108,7 +108,7 @@ class ServiceLayerTest(TestCase):
         user test only has 10
         user other has 100
         """
-        self.assertIn('{"test": {"money__sum": "10"}', self.response.summary_categories)
+        self.assertIn('{"test": "10.00"}', self.response.summary_categories)
 
     def test_summary_exclude(self):
         data = dict(
