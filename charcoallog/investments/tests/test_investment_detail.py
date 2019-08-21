@@ -6,7 +6,7 @@ from django.shortcuts import resolve_url as r
 from django.test import TestCase
 
 from charcoallog.investments.models import NewInvestmentDetails
-from charcoallog.investments.views import kind_quant
+from charcoallog.investments.views import inheritance_serializer, kind_quant
 
 
 class InvestmentDetailTest(TestCase):
@@ -26,7 +26,7 @@ class InvestmentDetailTest(TestCase):
         self.which_target = 'Tesouro Direto'
         self.segment = 'Selic'
         self.tx_or_price = '0.01'
-        self.quant = '1'
+        self.quant = '1.00'
 
         self.data = dict(
             user_name=user_n,
@@ -113,6 +113,26 @@ class InvestmentDetailTest(TestCase):
             with self.subTest():
                 self.assertIn(v, expected)
 
+    def test_inheritance_serializer(self):
+        k_json = inheritance_serializer('teste', self.kind)
+
+        self.assertEqual(k_json,
+                         [
+                             {
+                                 'pk': 1,
+                                 'fields': {
+                                     'date': '2018-03-27',
+                                     'money': '94.42',
+                                     'kind': 'Títulos Públicos',
+                                     'which_target': 'Tesouro Direto',
+                                     'segment': 'Selic',
+                                     'tx_or_price': '0.01',
+                                     'quant': '1.00'
+                                 }
+                             }
+                         ]
+                         )
+
     def test_item_quant(self):
         """ show quantity of each investment in details page """
         data = dict(
@@ -127,8 +147,31 @@ class InvestmentDetailTest(TestCase):
         )
 
         NewInvestmentDetails.objects.create(**data)
-        self.assertEqual(NewInvestmentDetails.objects.all().count(), 2)
+        data['quant'] = 15
+        NewInvestmentDetails.objects.create(**data)
+        data['kind'] = 'Third'
+        data['which_target'] = 't'
+        data['quant'] = 15
+        NewInvestmentDetails.objects.create(**data)
+        data['quant'] = 15
+        NewInvestmentDetails.objects.create(**data)
+        data['quant'] = 15
+        NewInvestmentDetails.objects.create(**data)
+        data['which_target'] = 't_2'
+        data['quant'] = 15
+        NewInvestmentDetails.objects.create(**data)
 
-        for k, v, q in [(self.kind, self.which_target, 1), ('FAKE', 'ORUIM', 35)]:
-            quant = kind_quant('teste', k)
+        self.assertEqual(NewInvestmentDetails.objects.all().count(), 7)
+
+        expected = [
+            (self.kind, self.which_target, 1),
+            ('FAKE', 'ORUIM', 50),
+            ('Third', 't', 45),
+            ('Third', 't_2', 15),
+
+        ]
+
+        for k, v, q in expected:
+            quant, _ = kind_quant('teste', k)
             self.assertEqual(quant[v], q)
+            # self.assertEqual(d_json, {k: v})

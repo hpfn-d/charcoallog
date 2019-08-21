@@ -2,7 +2,6 @@ import json
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Sum
 from django.shortcuts import Http404, render
 from rest_framework import status
 from rest_framework.response import Response
@@ -37,8 +36,7 @@ def home(request):
 @login_required
 def newinvestmetdetails_detail(request, kind):
     # post = DetailPost(request)  # noqa F841
-    kind_qs = inheritance_serializer(request.user, kind)
-    w_target_quant = kind_quant(request.user, kind)
+    w_target_quant, kind_qs = kind_quant(request.user, kind)
 
     context = {
         'w_target': w_target_quant,
@@ -127,12 +125,24 @@ def inheritance_serializer(request_user, kind):
 
 
 def kind_quant(u, k):
-    w_t = NewInvestmentDetails.objects.user_logged(u).filter(kind=k).values_list('which_target')
-    w_t = set(w_t)
-    choosen_one = {
-        x[0]: NewInvestmentDetails.objects.user_logged(u).filter(
-            which_target=x[0]).aggregate(Sum('quant'))['quant__sum']
-        for x in w_t
-    }
+    kind_json = inheritance_serializer(u, k)
+    choosen_one = dict()
 
-    return choosen_one
+    for q in kind_json:
+        k = q['fields']['which_target']
+        v = float(q['fields']['quant'])
+
+        if not choosen_one.get(k, 0):
+            choosen_one[k] = v
+        else:
+            choosen_one[k] += v
+
+    # w_t = NewInvestmentDetails.objects.user_logged(u).filter(kind=k).values_list('which_target')
+    # w_t = set(w_t)
+    # choosen_one = {
+    #     x[0]: NewInvestmentDetails.objects.user_logged(u).filter(
+    #         which_target=x[0]).aggregate(Sum('quant'))['quant__sum']
+    #     for x in w_t
+    # }
+
+    return choosen_one, kind_json
