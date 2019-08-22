@@ -143,11 +143,11 @@ Vue.component('all-reg-forms', {
 
                     new_account.id = index+index;
                     new_account.className = 'nav-item nav-link';
-                    var text = index + '<br><span id="' + index +'">' + value['money__sum'] + '</span>'
+                    var text = index + '<br><span id="' + index +'">' + value + '</span>'
                     new_account.innerHTML = text;
                     var t = document.getElementsByTagName('ul')[1].appendChild(new_account);
                 }
-                document.getElementById(index).textContent = value['money__sum']
+                document.getElementById(index).textContent = value
             });
             document.getElementById("left").textContent = w_left
         },
