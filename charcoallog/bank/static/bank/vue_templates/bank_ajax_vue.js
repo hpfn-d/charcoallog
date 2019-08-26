@@ -18,7 +18,8 @@ Vue.component('all-reg-forms', {
                 </div>
 
                 <div @input="n_mn">
-                <input type="text" id="money" name="money" step="0.01" class="form-inline m-0 p-0 bg-light"
+                <input type="text" id="money" name="money" step="0.01"
+                       class="form-inline m-0 p-0 bg-light"
                        :class="{ 'text-muted': isNaN(data.fields.money)}"
                        size="11" style="font-size:10px;border:none"
                        :style="styleObject"
@@ -27,7 +28,8 @@ Vue.component('all-reg-forms', {
                 </div>
 
                 <div @input="n_description">
-                <input type="text"  id="description" name="description" class="form-inline m-0 p-0 bg-light"
+                <input type="text"  id="description" name="description" maxlength="70"
+                       class="form-inline m-0 p-0 bg-light"
                        :class="{ 'text-muted': isNaN(data.fields.money)}"
                        size="20" style="font-size:10px;border:none"
                        :value="dscrptn" :disabled="edit"
@@ -35,7 +37,8 @@ Vue.component('all-reg-forms', {
                 </div>
 
                 <div @input="n_category">
-                <input type="text"  id="category" name="category" class="form-inline m-0 p-0 bg-light"
+                <input type="text"  id="category" name="category" maxlength="70"
+                       class="form-inline m-0 p-0 bg-light"
                        :class="{ 'text-muted': isNaN(data.fields.money)}"
                        size="20" style="font-size:10px;border:none"
                        :value="ctgr" :disabled="edit"
@@ -43,7 +46,8 @@ Vue.component('all-reg-forms', {
                 </div>
 
                 <div @input="n_payment">
-                <input type="text" id="payment" name="payment" class="form-inline m-0 p-0 bg-light"
+                <input type="text" id="payment" name="payment" maxlength="70"
+                       class="form-inline m-0 p-0 bg-light"
                        :class="{ 'text-muted': isNaN(data.fields.money)}"
                        size="20" style="font-size:10px;border:none"
                        :value="pmnt" :disabled="edit"

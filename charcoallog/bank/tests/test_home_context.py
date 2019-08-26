@@ -46,6 +46,7 @@ class HomeContextTest(TestCase):
             ('type="text"', 4),
             ('type="number"', 1),
             ('step="0.01"', 1),
+            ('maxlength="', 3),
             ('<button', 3),
             ('type="submit"', 2),
             ('<summary-tpl', 1),
