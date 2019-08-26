@@ -7,29 +7,10 @@ from charcoallog.bank.models import Extract
 
 
 class AjaxPostTest(TestCase):
-    fixtures = ['user.json']
+    fixtures = ['user.json', 'update_del.json']
 
     def setUp(self):
         self.user_name = 'test'
-        self.data = dict(
-            user_name=self.user_name,
-            date='2017-12-21',
-            money='10.00',
-            description='test',
-            category='test',
-            payment='principal'
-        )
-        Extract.objects.create(**self.data)
-        # to pass update test
-        update_test = dict(
-            user_name=self.user_name,
-            date='2017-12-21',
-            money='10.00',
-            description='test',
-            category='test',
-            payment='cartao credito'
-        )
-        Extract.objects.create(**update_test)
 
         self.login_in = self.client.login(username=self.user_name, password='1qa2ws3ed')
 
@@ -81,21 +62,18 @@ class AjaxPostTest(TestCase):
         """
         Invalid form, empty field
         """
-        self.data['payment'] = ''
-        self.data['pk'] = 1
+        data = dict()
+        data['payment'] = ''
+        data['pk'] = 1
         response = self.client.put(r('bank:home_api', 1),
-                                   json.dumps(self.data),
+                                   json.dumps(data),
                                    content_type='application/json')
         self.assertEqual(400, response.status_code)
 
-        expected = [
-            'payment',
-            'This field may not be blank'
-        ]
-
-        for value in expected:
-            with self.subTest():
-                self.assertIn(value, response.content.decode())
+        resp_d = json.loads(response.content.decode())
+        self.assertIsInstance(resp_d, dict)
+        self.assertIn('payment', resp_d.keys())
+        self.assertIn('This field may not be blank', resp_d['payment'][0])
 
     def test_form_not_valid(self):
         """
@@ -112,15 +90,13 @@ class AjaxPostTest(TestCase):
         response = self.client.put(r('bank:home_api', 1),
                                    json.dumps(not_valid),
                                    content_type='application/json')
-        self.assertEqual(400, response.status_code)
-        expected = [
-            'date',
-            'Date has wrong format'
-        ]
 
-        for value in expected:
-            with self.subTest():
-                self.assertIn(value, response.content.decode())
+        self.assertEqual(400, response.status_code)
+
+        resp_d = json.loads(response.content.decode())
+        self.assertIsInstance(resp_d, dict)
+        self.assertIn('date', resp_d.keys())
+        self.assertIn('Date has wrong format', resp_d['date'][0])
 
     def test_user_name(self):
         """
