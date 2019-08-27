@@ -1,22 +1,12 @@
 import json
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import User
 from django.shortcuts import resolve_url as r
 from django.test import TestCase
 from rest_framework.views import APIView
 
 from charcoallog.investments.models import NewInvestment, NewInvestmentDetails
 from charcoallog.investments.views import DetailApi, HomeApi
-
-data = dict(
-    user_name="teste",
-    date="2018-08-30",
-    money=1000,
-    kind="Títulos Públicos",
-    tx_op=0.00,
-    brokerage='A'
-)
 
 
 class FormDealsAttrTest(TestCase):
@@ -46,26 +36,11 @@ class FormDealsAttrTest(TestCase):
 
 
 class NoAccessFormDealsAPIView(TestCase):
-    def setUp(self):
-        i_data = {}
-        i_data.update(data)
-        i_data['tx_op'] = 10.00
-        i_data['brokerage'] = "ALTA"
-
-        NewInvestment.objects.create(**i_data)
-
-    def test_no_access(self):
-        """ No login yet. No access to the APIView"""
-        response = self.client.delete(r('investments:home_api', 1))
-        self.assertEqual(403, response.status_code)
+    fixtures = ['user.json', 'update_del.json']
 
     def test_delete_data(self):
         """ DELETE data in DB"""
-        user = User.objects.create(username='teste')
-        user.set_password('1qa2ws3ed')
-        user.save()
-
-        login_in = self.client.login(username='teste', password='1qa2ws3ed')  # noqa F841
+        login_in = self.client.login(username='test', password='1qa2ws3ed')  # noqa F841
         response = self.client.delete(r('investments:home_api', 1))
         self.assertEqual(204, response.status_code)
 
@@ -122,6 +97,27 @@ class DetailApiAttrTest(TestCase):
         self.assertFalse(hasattr(self.attrs, 'post'))
 
 
+class NoAccess(TestCase):
+    def test_no_access_detail_api(self):
+        """ No login yet. No access to the APIView"""
+        response = self.client.delete(r('investments:details_api', 1))
+        self.assertEqual(403, response.status_code)
+
+    def test_no_access_form_deals_api(self):
+        """ No login yet. No access to the APIView"""
+        response = self.client.delete(r('investments:home_api', 1))
+        self.assertEqual(403, response.status_code)
+
+
+data = dict(
+    user_name="teste",
+    date="2018-08-30",
+    money=1000,
+    kind="Títulos Públicos",
+    tx_op=0.00,
+    brokerage='A'
+)
+
 to_put = dict()
 to_put.update(data)
 to_put['which_target'] = "NO"
@@ -130,32 +126,11 @@ to_put['tx_or_price'] = 0.00
 to_put['quant'] = 0.00
 
 
-class NoAccessDetailApi(TestCase):
-    def setUp(self):
-        NewInvestmentDetails.objects.create(**to_put)
-
-    def test_no_access(self):
-        """ No login yet. No access to the APIView"""
-        response = self.client.delete(r('investments:details_api', 1))
-        self.assertEqual(403, response.status_code)
-
-
-class NoAccessFormDealsAPI(TestCase):
-    def test_no_access(self):
-        """ No login yet. No access to the APIView"""
-        response = self.client.delete(r('investments:home_api', 1))
-        self.assertEqual(403, response.status_code)
-
-
 class FormDealsTest(TestCase):
+    fixtures = ['user.json', 'update_del.json']
+
     def setUp(self):
-        user = User.objects.create(username='teste')
-        user.set_password('1qa2ws3ed')
-        user.save()
-
-        NewInvestment.objects.create(**data)
-
-        self.login_in = self.client.login(username='teste', password='1qa2ws3ed')
+        self.login_in = self.client.login(username='test', password='1qa2ws3ed')
 
     def test_login(self):
         self.assertTrue(self.login_in)
@@ -182,34 +157,31 @@ class FormDealsTest(TestCase):
 
     def test_delete(self):
         response = self.client.delete(r('investments:home_api', 1))  # noqa
-        self.assertFalse(NewInvestment.objects.exists())
+        self.assertFalse(NewInvestment.objects.filter(pk=1).exists())
 
 
 class DetailApiTest(TestCase):
+    fixtures = ['user.json', 'update_del.json']
+
     def setUp(self):
-        user = User.objects.create(username='teste')
-        user.set_password('1qa2ws3ed')
-        user.save()
-
-        NewInvestmentDetails.objects.create(**to_put)
-
-        self.login_in = self.client.login(username='teste', password='1qa2ws3ed')
+        self.login_in = self.client.login(username='test', password='1qa2ws3ed')
 
     def test_login(self):
         self.assertTrue(self.login_in)
 
     def test_data_in_db(self):
         """ Data saved in DB showed in html"""
-        response = self.client.get(r('investments:details', data['kind']))
+        response = self.client.get(r('investments:details', "Títulos Públicos"))
         self.assertEqual(200, response.status_code)
+
         expected = [
             "NO",
             "INSERT",
-            '0.00'
+            '0.00',
         ]
         for value in expected:
             with self.subTest():
-                self.assertIn(value, response.content.decode())
+                self.assertContains(response, value)
 
     def test_good_data(self):
         """ Send good data to PUT"""
@@ -221,8 +193,8 @@ class DetailApiTest(TestCase):
         l_put['tx_or_price'] = 10.00
         l_put['quant'] = 10.00
 
-        self.assertTrue(NewInvestmentDetails.objects.filter(pk=1).exists())
-        self.assertEqual(NewInvestmentDetails.objects.all().count(), 1)
+        self.assertTrue(NewInvestmentDetails.objects.filter(pk=2).exists())
+        self.assertEqual(NewInvestmentDetails.objects.all().count(), 2)
 
         response = self.client.put(r('investments:details_api', 1),
                                    json.dumps(l_put),
@@ -241,7 +213,7 @@ class DetailApiTest(TestCase):
         data['money'] = 1000.00
 
         self.assertTrue(NewInvestmentDetails.objects.filter(pk=1).exists())
-        self.assertEqual(NewInvestmentDetails.objects.all().count(), 1)
+        self.assertEqual(NewInvestmentDetails.objects.all().count(), 2)
 
     def test_invalid_data(self):
         """ Send invalid data to PUT """
@@ -257,4 +229,4 @@ class DetailApiTest(TestCase):
 
     def test_delete(self):
         response = self.client.delete(r('investments:details_api', 1))  # noqa
-        self.assertFalse(NewInvestmentDetails.objects.exists())
+        self.assertFalse(NewInvestmentDetails.objects.filter(pk=1).exists())
