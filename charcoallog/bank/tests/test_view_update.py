@@ -72,7 +72,7 @@ class AjaxPostTest(TestCase):
 
         resp_d = json.loads(response.content.decode())
         self.assertIsInstance(resp_d, dict)
-        self.assertIn('payment', resp_d.keys())
+        self.assertTrue(resp_d.get('payment'))
         self.assertIn('This field may not be blank', resp_d['payment'][0])
 
     def test_form_not_valid(self):
