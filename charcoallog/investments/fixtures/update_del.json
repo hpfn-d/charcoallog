@@ -1,0 +1,58 @@
+[{
+  "model": "investments.NewInvestment",
+  "pk": 1,
+  "fields": {
+    "user_name": "test",
+    "date": "2018-08-30",
+    "money": 1000,
+    "kind": "Títulos Públicos",
+    "tx_op": 0.00,
+    "brokerage": "ALTA"
+  }
+},
+  {
+    "model": "investments.NewInvestmentDetails",
+    "pk": 1,
+    "fields": {
+      "user_name": "test",
+      "date": "2018-08-30",
+      "money": 1000,
+      "kind": "Títulos Públicos",
+      "tx_op": 0.00,
+      "brokerage": "ALTA",
+      "which_target": "NO",
+      "segment": "INSERT",
+      "tx_or_price": 0.00,
+      "quant": 0.00
+    }
+},
+  {
+  "model": "investments.NewInvestment",
+  "pk": 2,
+  "fields": {
+    "user_name": "test",
+    "date": "2018-08-30",
+    "money": 3000,
+    "kind": "Títulos Públicos",
+    "tx_op": 0.00,
+    "brokerage": "ALTA"
+  }
+},
+  {
+   "model": "investments.NewInvestmentDetails",
+   "pk": 2,
+   "fields": {
+      "user_name": "test",
+      "date": "2018-08-30",
+      "money": 3000,
+      "kind": "Títulos Públicos",
+      "tx_op": 0.00,
+      "brokerage": "ALTA",
+      "which_target": "TO GO",
+      "segment": "TO PUT",
+      "tx_or_price": 10.00,
+      "quant": 10.00
+   }
+}
+]
+
