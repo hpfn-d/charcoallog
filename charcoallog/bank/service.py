@@ -21,11 +21,13 @@ class ShowData:
 
 
 class ScheduleData:
-    today = dt.datetime.today().strftime("%m")
+    current = dt.datetime.today()
+    today = current.strftime("%m")
+    year = current.strftime("%Y")
 
     def __init__(self, request_user):
         self.query_schedule = Schedule.objects.user_logged(request_user).filter(
-            date__month__lte=self.today)
+            date__month__lte=self.today, date__year=self.year)
 
     def brief_schedule(self):
         return BriefBank(self.query_schedule)
