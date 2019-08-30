@@ -1,3 +1,4 @@
+import calendar as cal
 import datetime as dt
 
 from charcoallog.bank.models import Extract, Schedule
@@ -67,26 +68,61 @@ def to_schedule(user, data):
         Schedule.objects.create(user_name=user, **item)
 
 
-def treat_recurrent(data):
-    todo_list = []
-
-    # remove recurrent word
-    description = data['description'].rpartition('recurrent')
-    description = description[-1].strip()
-    data['description'] = description
-
-    # set remaining months
-    d = data['date']
-    for m in range(d.month, 13):
-        recurrent = {**data}
-        recurrent.update(date=dt.datetime(d.year, m, d.day))
-        todo_list.append(recurrent)
-
-    return todo_list
-
-
 INSERT_TO = dict(
     to_extract=to_extract,
     to_schedule=to_schedule
 
 )
+
+
+def treat_recurrent(data):
+    """
+    return a list (item - dict) that contains
+    next months stuff
+    """
+    todo_list = []
+    counter, int_year, int_month, day = extract(data)
+
+    year_limit = prev_m = 0
+    for m in range(counter):
+        if year_limit == 12:
+            year, month = next_year(int_year, m, prev_m)
+        else:
+            year, year_limit, month, prev_m = current_year(int_year, int_month, m)
+
+        rec = update_date(data, year, month, day)
+        todo_list.append(rec)
+
+    return todo_list
+
+
+def extract(data):
+    description = data['description'].split()
+    counter = int(description[1])
+    description = ''.join(description[2:])
+    data['description'] = description.strip()
+    d = data['date']
+    return counter, int(d.year), int(d.month), d.day
+
+
+def update_date(data, year, month, day):
+    last_day = cal.monthrange(year, month)[1]
+    if last_day < day:
+        day = last_day
+
+    recurrent = {**data}
+    recurrent.update(date=dt.datetime(year, month, day))
+    return recurrent
+
+
+def next_year(int_year, m, prev_m):
+    year = int_year + 1
+    month = m - prev_m
+    return year, month
+
+
+def current_year(int_year, int_month, m):
+    year = int_year
+    year_limit = month = int_month + m
+    # prev_m = m
+    return year, year_limit, month, m

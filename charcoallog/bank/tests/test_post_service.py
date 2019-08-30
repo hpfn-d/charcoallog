@@ -182,7 +182,7 @@ class AllRemainingMonths(TestCase):
         self.data = dict(
             date='2017-06-21',
             money=self.value,
-            description='recurrent description',
+            description='recurrent 7 description',
             category='remaining',
             payment=self.account_1,
             schedule=True
@@ -217,6 +217,97 @@ class AllRemainingMonths(TestCase):
             with self.subTest():
                 self.assertEqual(e, r)
 
-    def tearDown(self):
+        #    def tearDown(self):
         d = Schedule.objects.all()
         d.delete()
+
+
+class FirstSevenMonths(TestCase):
+    def setUp(self):
+        self.user = 'teste'
+        self.account_1 = 'principal'
+        self.value = '-10.00'
+
+        self.data = dict(
+            date='2017-01-21',
+            money=self.value,
+            description='recurrent 7 description',
+            category='remaining',
+            payment=self.account_1,
+            schedule=True
+        )
+
+        RQST.method = "POST"
+        RQST.POST = self.data
+        RQST.user = self.user
+        MethodPost(RQST)
+
+    def test_count_records(self):
+        c = Schedule.objects.all().count()
+        self.assertEqual(c, 7)
+
+    def test_month_not_exists(self):
+        month = Schedule.objects.filter(date='2017-08-21')
+        self.assertFalse(month.exists())
+
+
+class MiddleOfYear(TestCase):
+    def setUp(self):
+        self.user = 'teste'
+        self.account_1 = 'principal'
+        self.value = '-10.00'
+
+        self.data = dict(
+            date='2017-04-21',
+            money=self.value,
+            description='recurrent 4 description',
+            category='remaining',
+            payment=self.account_1,
+            schedule=True
+        )
+
+        RQST.method = "POST"
+        RQST.POST = self.data
+        RQST.user = self.user
+        MethodPost(RQST)
+
+    def test_count_records(self):
+        c = Schedule.objects.all().count()
+        self.assertEqual(c, 4)
+
+
+class MonthNextYear(TestCase):
+    def setUp(self):
+        self.user = 'teste'
+        self.account_1 = 'principal'
+        self.value = '-10.00'
+
+        self.data = dict(
+            date='2017-08-21',
+            money=self.value,
+            description='recurrent 7 description',
+            category='remaining',
+            payment=self.account_1,
+            schedule=True
+        )
+
+        RQST.method = "POST"
+        RQST.POST = self.data
+        RQST.user = self.user
+        MethodPost(RQST)
+
+    def test_count_records(self):
+        c = Schedule.objects.all().count()
+        self.assertEqual(c, 7)
+
+    def test_two_month_next_year(self):
+        month = Schedule.objects.filter(date__year='2018')
+        self.assertEqual(2, month.count())
+
+    def test_month_jan(self):
+        jan = Schedule.objects.filter(date__month='01')
+        self.assertTrue(jan.exists())
+
+    def test_month_feb(self):
+        feb = Schedule.objects.filter(date__month='02')
+        self.assertTrue(feb.exists())
