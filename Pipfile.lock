@@ -68,11 +68,10 @@
         },
         "django-extensions": {
             "hashes": [
-                "sha256:4aafdb865104eaa5d681b9976b36c52c9d441be89b7d782e40808f1c5c0c8f93",
-                "sha256:8a2552fdeb222b23895ef52cdc28fc56efba976f6da07ca92937f6f5e626e345"
+                "sha256:1a03c4e8bade575f8c2be6c76456f8a2be3f9b02ab9f47d3535afa9562dc0493",
+                "sha256:2699cc1d6fb4bd393c0b5832fea4bc685f2ace5800b3c9ff222b2080f161ac04"
             ],
-            "index": "pypi",
-            "version": "==2.2.1"
+            "version": "==2.2.8"
         },
         "django-timezone-field": {
             "hashes": [
