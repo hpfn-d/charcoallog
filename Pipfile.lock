@@ -110,9 +110,9 @@
         },
         "python-crontab": {
             "hashes": [
-                "sha256:11488bbac026bf77a659fee0bf8e20de9651753ad0fdf6649237e3b9e04b866a"
+                "sha256:ed9583cff430715d9560cbad28309429ac13f3fdb13051ac2288050e05abc392"
             ],
-            "version": "==2.3.8"
+            "version": "==2.4.2"
         },
         "python-dateutil": {
             "hashes": [
