@@ -18,10 +18,10 @@
     "default": {
         "amqp": {
             "hashes": [
-                "sha256:19a917e260178b8d410122712bac69cb3e6db010d68f6101e7307508aded5e68",
-                "sha256:19d851b879a471fcfdcf01df9936cff924f422baa77653289f7095dedd5fb26a"
+                "sha256:1733ebf713050504fd9d2ebc661f1fc95b3588f99ee87d2e39c84c27bfd815dc",
+                "sha256:2c58528a05dcbf2ae080f3141b6a5bf467949fad9234edd8b9085b8db2e325fe"
             ],
-            "version": "==2.5.1"
+            "version": "==5.0.3"
         },
         "beautifulsoup4": {
             "hashes": [
