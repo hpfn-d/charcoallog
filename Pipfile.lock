@@ -81,11 +81,10 @@
         },
         "djangorestframework": {
             "hashes": [
-                "sha256:42979bd5441bb4d8fd69d0f385024a114c3cae7df0f110600b718751250f6929",
-                "sha256:aedb48010ebfab9651aaab1df5fd3b4848eb4182afc909852a2110c24f89a359"
+                "sha256:48e64f08244fa0df9e2b8fbd405edec263d8e1251112a06d0073b546b7c86b9c",
+                "sha256:8b987d5683f5b3553dd946d4972048d3117fc526cb0bc01a3f021e81af53f39e"
             ],
-            "index": "pypi",
-            "version": "==3.10.2"
+            "version": "==3.13.0"
         },
         "importlib-metadata": {
             "hashes": [
