@@ -122,10 +122,10 @@
         },
         "python-decouple": {
             "hashes": [
-                "sha256:1317df14b43efee4337a4aa02914bf004f010cd56d6c4bd894e6474ec8c4fe2d"
+                "sha256:011d3f785367c54a72cf8a07d3a7a48bb8cc1a0f8e6c70353ca5767ebf7c8c9d",
+                "sha256:68e4b3fcc97e24bc90eecc514852d0bf970f4ff031f5f7a6728ddafa9afefcaf"
             ],
-            "index": "pypi",
-            "version": "==3.1"
+            "version": "==3.5"
         },
         "pytz": {
             "hashes": [
