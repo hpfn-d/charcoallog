@@ -155,12 +155,8 @@
             "version": "==6.8.0"
         },
         "ipython": {
-            "hashes": [
-                "sha256:1d3a1692921e932751bc1a1f7bb96dc38671eeefdc66ed33ee4cbc57e92a410e",
-                "sha256:537cd0176ff6abd06ef3e23f2d0c4c2c8a4d9277b7451544c6cbf56d1c79a83d"
-            ],
-            "index": "pypi",
-            "version": "==7.7.0"
+            "hashes": [],
+            "version": "==8.17.1"
         },
         "ipython-genutils": {
             "hashes": [
