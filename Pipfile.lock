@@ -52,11 +52,8 @@
             "version": "==3.2.3"
         },
         "django-timezone-field": {
-            "hashes": [
-                "sha256:7d7a37cfeacec5b1e81cd2f0aa334d46ebaa369cd516028579ed343cbc676c38",
-                "sha256:d9fdab77c443b78c362ffaeb50fe7d7b54692c89aaae8ca1cae67848139b82ac"
-            ],
-            "version": "==3.0"
+            "hashes": [],
+            "version": "==6.0.1"
         },
         "djangorestframework": {
             "hashes": [
