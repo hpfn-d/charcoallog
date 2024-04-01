@@ -72,10 +72,8 @@
             "version": "==10.2.0"
         },
         "python-crontab": {
-            "hashes": [
-                "sha256:11488bbac026bf77a659fee0bf8e20de9651753ad0fdf6649237e3b9e04b866a"
-            ],
-            "version": "==2.3.8"
+            "hashes": [],
+            "version": "==3.0.0"
         },
         "python-dateutil": {
             "hashes": [
