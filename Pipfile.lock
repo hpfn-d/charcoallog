@@ -56,12 +56,8 @@
             "version": "==6.1.0"
         },
         "djangorestframework": {
-            "hashes": [
-                "sha256:42979bd5441bb4d8fd69d0f385024a114c3cae7df0f110600b718751250f6929",
-                "sha256:aedb48010ebfab9651aaab1df5fd3b4848eb4182afc909852a2110c24f89a359"
-            ],
-            "index": "pypi",
-            "version": "==3.10.2"
+            "hashes": [],
+            "version": "==3.15.1"
         },
         "importlib-metadata": {
             "hashes": [
