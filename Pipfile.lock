@@ -60,11 +60,8 @@
             "version": "==3.15.2"
         },
         "importlib-metadata": {
-            "hashes": [
-                "sha256:23d3d873e008a513952355379d93cbcab874c58f4f034ff657c7a87422fa64e8",
-                "sha256:80d2de76188eabfbfcf27e6a37342c2827801e59c4cc14b0371c56fed43820e3"
-            ],
-            "version": "==0.19"
+            "hashes": [],
+            "version": "==7.2.1"
         },
         "kombu": {
             "hashes": [
@@ -239,11 +236,8 @@
             "version": "==3.7.8"
         },
         "importlib-metadata": {
-            "hashes": [
-                "sha256:23d3d873e008a513952355379d93cbcab874c58f4f034ff657c7a87422fa64e8",
-                "sha256:80d2de76188eabfbfcf27e6a37342c2827801e59c4cc14b0371c56fed43820e3"
-            ],
-            "version": "==0.19"
+            "hashes": [],
+            "version": "==7.2.1"
         },
         "ipython": {
             "hashes": [
